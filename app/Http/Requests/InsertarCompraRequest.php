@@ -24,6 +24,18 @@ class InsertarCompraRequest extends FormRequest
             'id_proveedor.integer' => 'El proveedor seleccionado no es válido.',
             'id_proveedor.exists' => 'El proveedor seleccionado no existe.',
 
+            'condicion_pago.required' => 'Debe indicar si la compra es al contado o a crédito.',
+            'condicion_pago.in' => 'La condición de pago debe ser contado o crédito.',
+
+            'fecha_vencimiento.required_if' => 'Las compras a crédito necesitan una fecha de vencimiento.',
+            'fecha_vencimiento.date' => 'La fecha de vencimiento no es válida.',
+            'fecha_vencimiento.after_or_equal' => 'La fecha de vencimiento no puede ser anterior a hoy.',
+            'fecha_vencimiento.prohibited_unless' => 'Solo las compras a crédito tienen fecha de vencimiento.',
+
+            'abono_inicial.numeric' => 'El abono inicial debe ser un valor numérico.',
+            'abono_inicial.min' => 'El abono inicial no puede ser negativo.',
+            'abono_inicial.max' => 'El abono inicial supera el límite permitido.',
+
             'detalles.required' => 'Debe agregar al menos un producto a la compra.',
             'detalles.array' => 'Los detalles de la compra tienen un formato inválido.',
             'detalles.min' => 'La compra debe contener al menos un producto.',
