@@ -20,13 +20,17 @@ class InsertarReservaRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'id_cliente.required' => 'Debe seleccionar un cliente.',
+            'id_cliente.required' => 'Debe seleccionar un cliente registrado.',
             'id_cliente.integer' => 'El cliente seleccionado no es válido.',
             'id_cliente.exists' => 'El cliente seleccionado no existe.',
 
-            'id_mesa.required' => 'Debe seleccionar una mesa.',
-            'id_mesa.integer' => 'La mesa seleccionada no es válida.',
-            'id_mesa.exists' => 'La mesa seleccionada no existe.',
+            'id_mesas.required' => 'Debe seleccionar al menos una mesa.',
+            'id_mesas.array' => 'Las mesas seleccionadas no son válidas.',
+            'id_mesas.min' => 'Debe seleccionar al menos una mesa.',
+            'id_mesas.*.required' => 'Debe seleccionar una mesa válida.',
+            'id_mesas.*.integer' => 'Una de las mesas seleccionadas no es válida.',
+            'id_mesas.*.distinct' => 'No puede seleccionar la misma mesa dos veces.',
+            'id_mesas.*.exists' => 'Una de las mesas seleccionadas no existe.',
 
             'fecha.required' => 'La fecha de la reserva es obligatoria.',
             'fecha.date' => 'La fecha proporcionada no es válida.',

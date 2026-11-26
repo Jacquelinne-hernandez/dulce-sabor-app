@@ -11,13 +11,15 @@ class ActualizarEstadoReservaRequest extends FormRequest
         return true;
     }
 
+    // "atendida" no se puede elegir: la fija el sistema al registrar
+    // el pedido de la reserva.
     public function rules(): array
     {
         return [
             'estado' => [
                 'required',
                 'string',
-                'in:pendiente,confirmada,cancelada,atendida',
+                'in:confirmada,cancelada',
             ],
         ];
     }
@@ -27,7 +29,7 @@ class ActualizarEstadoReservaRequest extends FormRequest
         return [
             'estado.required' => 'Debe seleccionar un estado.',
             'estado.string' => 'El estado debe ser texto.',
-            'estado.in' => 'El estado seleccionado no es válido.',
+            'estado.in' => 'El estado seleccionado no es válido. Una reserva solo puede confirmarse o cancelarse; pasa a atendida al registrar su pedido.',
         ];
     }
 }
