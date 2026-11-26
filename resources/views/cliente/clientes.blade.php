@@ -7,6 +7,7 @@
 
 @section('contenido')
 <div id="modulo-clientes"
+     data-es-admin="{{ auth()->user()?->rol?->nombre === 'Administrador' ? 'true' : 'false' }}"
      data-url-todos="{{ route('clientes.todos') }}"
      data-url-insertar="{{ route('clientes.insertar') }}"
      data-url-buscar="{{ route('clientes.buscar', ['id' => '__ID__']) }}"

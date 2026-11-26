@@ -1,0 +1,47 @@
+/* ==========================================
+   DULCE SABOR SYS - FORMATO DE CAMPOS
+   Avisos en tiempo real, contador de caracteres
+   y prefijo del teléfono. Lo usa formato.js.
+   ========================================== */
+
+.formato-aviso {
+    display: flex;
+    align-items: center;
+    margin-top: .3rem;
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--tono-warning-fg, #b7791f);
+    animation: formato-entrar .18s ease-out;
+}
+
+.formato-sacudir { animation: formato-sacudir .26s ease-in-out; }
+
+.formato-contador {
+    margin-top: .2rem;
+    text-align: right;
+    font-size: .75rem;
+    color: var(--lila-texto, #77518c);
+}
+.formato-contador--limite { color: var(--tono-warning-fg, #b7791f); font-weight: 600; }
+
+.formato-prefijo {
+    font-weight: 600;
+    color: var(--lila-oscuro, #50216e);
+    background: var(--lila-tenue, #f9f0fc);
+    border-color: var(--lila-borde, #dcb5ec);
+}
+
+@keyframes formato-entrar {
+    from { opacity: 0; transform: translateY(-3px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes formato-sacudir {
+    0%, 100% { transform: translateX(0); }
+    25%      { transform: translateX(-4px); }
+    75%      { transform: translateX(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .formato-aviso, .formato-sacudir { animation: none; }
+}

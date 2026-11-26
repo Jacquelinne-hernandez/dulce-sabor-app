@@ -112,24 +112,9 @@
     };
 
     /* ------------------------------------------------------------------
-     * Máscaras de campos (tarjeta simulada)
-     *   data-mascara="tarjeta" | "vencimiento" | "digitos"
+     * Máscaras de campos: las maneja formato.js (se carga después de este
+     * archivo) a partir del atributo "name" de cada campo.
      * ------------------------------------------------------------------ */
-    $(document).on('input', '[data-mascara="tarjeta"]', function () {
-        const digitos = this.value.replace(/\D/g, '').slice(0, 19);
-
-        this.value = digitos.replace(/(.{4})/g, '$1 ').trim();
-    });
-
-    $(document).on('input', '[data-mascara="vencimiento"]', function () {
-        const digitos = this.value.replace(/\D/g, '').slice(0, 4);
-
-        this.value = digitos.length > 2 ? digitos.slice(0, 2) + '/' + digitos.slice(2) : digitos;
-    });
-
-    $(document).on('input', '[data-mascara="digitos"]', function () {
-        this.value = this.value.replace(/\D/g, '').slice(0, 4);
-    });
 
     /* ------------------------------------------------------------------
      * Buscador de clientes por código o nombre

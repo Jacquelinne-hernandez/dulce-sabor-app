@@ -301,10 +301,13 @@ $(function () {
     }
 
     function calcularCambio() {
-        const monto = Number($('#pago-monto').val()) || 0;
+        const monto = facturaPago ? saldoDe(facturaPago) : 0;
         const recibido = Number($('#pago-recibido').val()) || 0;
 
-        $('#pago-cambio').text(dinero(Math.max(0, Math.round((recibido - monto) * 100) / 100)));
+        const diferencia = Math.round((recibido - monto) * 100) / 100;
+
+        $('#pago-cambio').closest('.pago-cambio').toggleClass('text-danger', diferencia < 0);
+        $('#pago-cambio').text(diferencia < 0 ? 'Faltan ' + dinero(-diferencia) : dinero(diferencia));
     }
 
     function ajustarMetodo() {
@@ -329,17 +332,13 @@ $(function () {
             dinero(f.saldo) + '</span></div>'
         );
 
-        $('#pago-monto').val(saldoDe(f).toFixed(2)).attr('max', saldoDe(f).toFixed(2));
         $('#pago-recibido').val(saldoDe(f).toFixed(2));
         calcularCambio();
         App.modal('#modal-facturas-pago').show();
     }
 
     $('#form-pago').on('change', 'input[name="metodo"]', ajustarMetodo);
-    $('#pago-monto').on('input', function () {
-        $('#pago-recibido').val($(this).val());
-        calcularCambio();
-    });
+    // El pago siempre cubre el saldo completo: no hay campo de monto.
     $('#pago-recibido').on('input', calcularCambio);
 
     $('#form-pago').on('submit', function (e) {
@@ -349,8 +348,7 @@ $(function () {
         const $enviar = $('button[type="submit"][form="form-pago"]');
         const datos = {
             id_factura: facturaPago.id,
-            metodo: metodoActual(),
-            monto: $('#pago-monto').val() || null
+            metodo: metodoActual()
         };
 
         if (datos.metodo === 'efectivo') {

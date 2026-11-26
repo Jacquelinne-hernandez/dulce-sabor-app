@@ -1,4 +1,7 @@
 $(function () {
+    // Eliminar clientes es solo del administrador (el operador puede editar).
+    const esAdmin = String($('#modulo-clientes').data('esAdmin')) === 'true';
+
     App.crud({
         raiz: '#modulo-clientes',
         tabla: '#tabla-clientes tbody',
@@ -33,7 +36,7 @@ $(function () {
                 '<td><span class="badge text-bg-info">' + Number(c.puntos || 0) + ' pts</span></td>' +
                 '<td>' + App.fechaCorta(c.fecha_registro) + '</td>' +
                 '<td>' + App.badgeEstado(c.estado ? c.estado.estado : '') + '</td>' +
-                '<td class="text-end">' + App.botonesCrud(c.id) + '</td>' +
+                '<td class="text-end">' + App.botonesCrud(c.id, { eliminar: esAdmin }) + '</td>' +
                 '</tr>';
         }
     });

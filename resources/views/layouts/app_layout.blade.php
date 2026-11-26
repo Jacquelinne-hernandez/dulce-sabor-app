@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/componentes.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/formato.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/paginacion.css') }}">
     @stack('estilos')
 </head>
 <body class="app-body">
@@ -242,6 +244,8 @@
 <script src="{{ asset('js/toast.js') }}"></script>
 <script src="{{ asset('js/global.js') }}"></script>
 <script src="{{ asset('js/extras.js') }}"></script>
+<script src="{{ asset('js/formato.js') }}"></script>
+<script src="{{ asset('js/paginacion.js') }}"></script>
 @stack('scripts')
 </body>
 </html>

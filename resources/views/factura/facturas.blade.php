@@ -145,11 +145,9 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="pago-monto" class="form-label">Monto a pagar ($)</label>
-                            <input type="number" class="form-control" id="pago-monto" name="monto" min="0.01" step="0.01">
-                            <div class="form-text">Si es menor al saldo se registra como abono.</div>
-                        </div>
+                        <p class="form-text mb-3">
+                            <i class="fa-solid fa-circle-info me-1"></i>El pago cubre el saldo completo de la factura.
+                        </p>
 
                         <div id="pago-efectivo">
                             <label for="pago-recibido" class="form-label">Efectivo recibido ($)</label>
