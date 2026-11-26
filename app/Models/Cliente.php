@@ -92,20 +92,22 @@ class Cliente extends Model
             'nombre' => [
                 'required',
                 'string',
-                'max:50'
+                'max:50',
+                'regex:/^[\pL][\pL\s.\'\-]*$/u'
             ],
 
             'apellido' => [
                 'required',
                 'string',
-                'max:50'
+                'max:50',
+                'regex:/^[\pL][\pL\s.\'\-]*$/u'
             ],
 
             // Datos de contacto opcionales.
             'telefono' => [
                 'nullable',
                 'string',
-                'max:20'
+                'regex:/^\d{4}-\d{4}$/'
             ],
 
             'correo' => [

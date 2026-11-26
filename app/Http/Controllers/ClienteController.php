@@ -176,7 +176,12 @@ class ClienteController extends Controller
 
     public function eliminarCliente($id): JsonResponse
     {
-        $cliente = Cliente::buscarClienteXId($id);
+        if (auth()->user()?->rol?->nombre !== 'Administrador') {
+            return response()->json([
+                'success' => false,
+                'mensaje' => 'Solo un administrador puede eliminar clientes.'
+            ], 403);
+        }        $cliente = Cliente::buscarClienteXId($id);
 
         if (!$cliente) {
             return response()->json([

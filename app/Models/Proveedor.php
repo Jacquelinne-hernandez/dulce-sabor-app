@@ -62,13 +62,14 @@ class Proveedor extends Model
             'nombre_contacto' => [
                 'nullable',
                 'string',
-                'max:100'
+                'max:100',
+                'regex:/^[\pL][\pL\s.\'\-]*$/u'
             ],
 
             'telefono' => [
                 'nullable',
                 'string',
-                'max:9',
+                'regex:/^\d{4}-\d{4}$/',
                 Rule::unique('proveedores', 'telefono')->ignore($id)
             ],
 

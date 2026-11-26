@@ -10,6 +10,7 @@ use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HorarioController;
+use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MesaController;
 use App\Http\Controllers\OrdenController;
@@ -62,7 +63,6 @@ Route::middleware(['auth', 'rol:Administrador,Operador'])->group(function () {
     Route::post('clientes/insertar', [ClienteController::class, 'insertarCliente'])->name('clientes.insertar');
     Route::get('clientes/buscar/{id}', [ClienteController::class, 'buscarCliente'])->name('clientes.buscar');
     Route::put('clientes/actualizar/{id}', [ClienteController::class, 'actualizarCliente'])->name('clientes.actualizar');
-    Route::delete('clientes/eliminar/{id}', [ClienteController::class, 'eliminarCliente'])->name('clientes.eliminar');
 
     // Catálogo de productos (solo lectura: existencias y precio, sin costo)
     Route::get('productos/catalogo', [ProductoController::class, 'catalogo'])->name('productos.catalogo');
@@ -141,6 +141,9 @@ Route::middleware(['auth', 'rol:Administrador,Operador'])->group(function () {
 
 Route::middleware(['auth', 'rol:Administrador'])->group(function () {
 
+    // Clientes: eliminar (solo administrador; el operador crea y edita)
+    Route::delete('clientes/eliminar/{id}', [ClienteController::class, 'eliminarCliente'])->name('clientes.eliminar');
+
     // Bitácora
     Route::get('bitacora', [BitacoraController::class, 'index'])->name('bitacora');
 
@@ -211,6 +214,15 @@ Route::middleware(['auth', 'rol:Administrador'])->group(function () {
     Route::post('gastos/insertar', [GastoController::class, 'insertarGasto'])->name('gastos.insertar');
     Route::put('gastos/actualizar/{id}', [GastoController::class, 'actualizarGasto'])->name('gastos.actualizar');
     Route::patch('gastos/anular/{id}', [GastoController::class, 'anularGasto'])->name('gastos.anular');
+
+    // Ingresos externos al giro del negocio (capital, inversiones, aportes...)
+    Route::get('ingresos', [IngresoController::class, 'index'])->name('ingresos');
+    Route::get('ingresos/todos', [IngresoController::class, 'mostrarTodos'])->name('ingresos.todos');
+    Route::get('ingresos/resumen', [IngresoController::class, 'resumen'])->name('ingresos.resumen');
+    Route::get('ingresos/buscar/{id}', [IngresoController::class, 'buscarIngreso'])->name('ingresos.buscar');
+    Route::post('ingresos/insertar', [IngresoController::class, 'insertarIngreso'])->name('ingresos.insertar');
+    Route::put('ingresos/actualizar/{id}', [IngresoController::class, 'actualizarIngreso'])->name('ingresos.actualizar');
+    Route::patch('ingresos/anular/{id}', [IngresoController::class, 'anularIngreso'])->name('ingresos.anular');
 
     // Horarios
     Route::get('horarios', [HorarioController::class, 'index'])->name('horarios');

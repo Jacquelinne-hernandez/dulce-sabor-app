@@ -12,7 +12,18 @@ use Illuminate\Validation\ValidationException;
 class Orden extends Model
 {
     // Laravel pluralizaría "Orden" como "ordens".
+    // Un encargo programado para más adelante solo pasa a producción desde
+    // estas horas antes de la fecha de entrega.
+    public const HORAS_ANTICIPACION_PRODUCCION = 5;
+
     protected $table = 'ordenes';
+
+    // Se incluyen en el JSON (solo si el pedido viene cargado) para que la
+    // pantalla sepa si el botón de producción está habilitado.
+    protected $appends = [
+        'produccion_desde',
+        'puede_iniciar',
+    ];
 
     protected $fillable = [
         'id_pedido',
@@ -35,6 +46,27 @@ class Orden extends Model
         'fecha_entrega' => 'datetime',
         'notas' => 'string',
     ];
+
+    // Momento desde el cual la orden puede pasar a producción (null si el
+    // pedido no es un encargo programado o no está cargado).
+    public function getProduccionDesdeAttribute(): ?string
+    {
+        if (!$this->relationLoaded('pedido') || !$this->pedido?->fecha_programada) {
+            return null;
+        }
+
+        return $this->pedido->fecha_programada
+            ->copy()
+            ->subHours(self::HORAS_ANTICIPACION_PRODUCCION)
+            ->toIso8601String();
+    }
+
+    public function getPuedeIniciarAttribute(): bool
+    {
+        $desde = $this->produccion_desde;
+
+        return $desde === null || now()->greaterThanOrEqualTo(\Carbon\Carbon::parse($desde));
+    }
 
     // Relaciones
 
@@ -79,6 +111,7 @@ class Orden extends Model
             'pedido.cliente',
             'pedido.mesa',
             'pedido.detalles.producto',
+            'pedido.factura:id,id_pedido,numero_factura,estado',
             'usuario',
         ];
     }
@@ -192,6 +225,27 @@ class Orden extends Model
                         'El pedido de esta orden ya no está abierto.',
                     ],
                 ]);
+            }
+
+            // Los encargos programados se preparan hasta 5 horas antes de
+            // la entrega, no antes.
+            if ($nuevoEstado === 'en_produccion' && $pedido->fecha_programada) {
+                $desde = $pedido->fecha_programada
+                    ->copy()
+                    ->subHours(self::HORAS_ANTICIPACION_PRODUCCION);
+
+                if (now()->lessThan($desde)) {
+                    throw ValidationException::withMessages([
+                        'estado' => [
+                            'Este encargo está programado para el '
+                            . $pedido->fecha_programada->format('d/m/Y H:i')
+                            . '. Podrá pasar a producción desde el '
+                            . $desde->format('d/m/Y H:i') . ' ('
+                            . self::HORAS_ANTICIPACION_PRODUCCION
+                            . ' horas antes de la entrega).',
+                        ],
+                    ]);
+                }
             }
 
             $estadoAnterior = $orden->estado;

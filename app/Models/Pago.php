@@ -94,6 +94,7 @@ class Pago extends Model
                 'string',
                 'min:3',
                 'max:60',
+                'regex:/^[\pL][\pL\s.\'\-]*$/u',
             ],
 
             'tarjeta_numero' => [
@@ -264,21 +265,13 @@ class Pago extends Model
 
             $saldo = Dinero::centavos($factura->total) - Dinero::centavos($pagado);
 
-            $monto = isset($datos['monto']) && $datos['monto'] !== ''
-                ? Dinero::centavos($datos['monto'])
-                : $saldo;
+            // El pago siempre cubre el saldo completo: no hay abonos ni
+            // montos libres.
+            $monto = $saldo;
 
             if ($monto <= 0) {
                 throw ValidationException::withMessages([
-                    'monto' => ['El monto debe ser mayor que cero.'],
-                ]);
-            }
-
-            if ($monto > $saldo) {
-                throw ValidationException::withMessages([
-                    'monto' => [
-                        'El monto supera el saldo pendiente ($' . Dinero::formato($saldo) . ').',
-                    ],
+                    'id_factura' => ['La factura no tiene saldo pendiente.'],
                 ]);
             }
 

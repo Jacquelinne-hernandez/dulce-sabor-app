@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\Models\Factura;
 use App\Models\Gasto;
+use App\Models\Ingreso;
 use App\Models\Vistas\CobroDiario;
 use App\Models\Vistas\CompraDiaria;
 use App\Models\Vistas\DeudaProveedor;
@@ -204,6 +205,22 @@ class Dashboard
         $cobradoEfectivo = self::suma($cobros->where('metodo', 'efectivo'), 'monto');
         $cobradoTarjeta = self::suma($cobros->where('metodo', 'tarjeta'), 'monto');
 
+        // ---- Ingresos externos (capital, inversiones, aportes) ----------
+        // No son ventas: no cambian la utilidad, solo el dinero en caja.
+
+        $ingresos = Ingreso::where('estado', 'registrado')
+            ->whereBetween('fecha_ingreso', [$desde, $hasta])
+            ->get();
+
+        $ingresosTotal = self::suma($ingresos, 'monto');
+
+        $ingresosPorTipo = [];
+        foreach (Ingreso::TIPOS as $tipo) {
+            $ingresosPorTipo[$tipo] = self::formato(
+                self::suma($ingresos->where('tipo', $tipo), 'monto')
+            );
+        }
+
         // ---- Serie diaria: ventas vs compras vs gastos ------------------
 
         $ventasPorDia = $facturas->groupBy(fn ($f) => $f->fecha->toDateString());
@@ -305,6 +322,8 @@ class Dashboard
 
             'gastos_por_tipo' => $gastosPorTipo,
 
+            'ingresos_por_tipo' => $ingresosPorTipo,
+
             'compras' => [
                 'cantidad' => (int) $compras->sum('compras'),
                 'total_comprado' => self::formato($totalComprado),
@@ -319,7 +338,8 @@ class Dashboard
                 'cobrado_tarjeta' => self::formato($cobradoTarjeta),
                 'pagado_proveedores' => self::formato($pagadoProveedores),
                 'gastos' => self::formato($gastosTotal),
-                'neto' => self::formato($cobrado - $pagadoProveedores - $gastosTotal),
+                'ingresos_externos' => self::formato($ingresosTotal),
+                'neto' => self::formato($cobrado + $ingresosTotal - $pagadoProveedores - $gastosTotal),
             ],
 
             // Deuda actual (no depende del rango).

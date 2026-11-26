@@ -658,30 +658,19 @@ class Pedido extends Model
                 ]);
             }
 
-            // Si ya se emitió una factura sin pagos, se anula con el pedido.
-            $factura = Factura::where('id_pedido', $pedido->id)
-                ->lockForUpdate()
-                ->first();
+            // Una vez facturado, el pedido ya se consumió: no se cancela.
+            // Si hubo un error, un administrador anula la factura.
+            $facturado = Factura::where('id_pedido', $pedido->id)
+                ->where('estado', '!=', 'anulada')
+                ->exists();
 
-            if ($factura && $factura->estado !== 'anulada') {
-
-                $conPagos = Pago::where('id_factura', $factura->id)
-                    ->where('estado', 'aplicado')
-                    ->exists();
-
-                if ($conPagos) {
-                    throw ValidationException::withMessages([
-                        'estado' => [
-                            'El pedido tiene pagos registrados. Solicite a un administrador anular la factura.',
-                        ],
-                    ]);
-                }
-
-                Factura::anularInterno(
-                    $factura,
-                    $idUsuario,
-                    'Se canceló el pedido'
-                );
+            if ($facturado) {
+                throw ValidationException::withMessages([
+                    'estado' => [
+                        'El pedido ya fue facturado y no puede cancelarse. '
+                        . 'Si hubo un error, solicite a un administrador anular la factura.',
+                    ],
+                ]);
             }
 
             self::cancelarInterno($pedido, $idUsuario, $motivo);

@@ -39,6 +39,7 @@ class InsertarPagoRequest extends FormRequest
             'tarjeta_titular.required_if' => 'Debe indicar el nombre del titular de la tarjeta.',
             'tarjeta_titular.min' => 'El nombre del titular debe tener al menos 3 caracteres.',
             'tarjeta_titular.max' => 'El nombre del titular no debe superar los 60 caracteres.',
+            'tarjeta_titular.regex' => 'El titular solo puede contener letras y espacios.',
 
             'tarjeta_numero.required_if' => 'Debe indicar el número de la tarjeta.',
             'tarjeta_numero.max' => 'El número de tarjeta es demasiado largo.',

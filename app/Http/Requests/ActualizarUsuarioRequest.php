@@ -3,10 +3,13 @@
 namespace App\Http\Requests;
 
 use App\Models\Usuario;
+use App\Http\Requests\Concerns\NormalizaDatos;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ActualizarUsuarioRequest extends FormRequest
 {
+    use NormalizaDatos;
+
     public function authorize(): bool
     {
         return true;
@@ -33,10 +36,12 @@ class ActualizarUsuarioRequest extends FormRequest
             'nombre.required' => 'El nombre del usuario es obligatorio.',
             'nombre.string' => 'El nombre debe ser una cadena de texto.',
             'nombre.max' => 'El nombre no debe superar los 50 caracteres.',
+            'nombre.regex' => 'El nombre solo puede contener letras, espacios, punto, apóstrofo y guion.',
 
             'apellido.required' => 'El apellido del usuario es obligatorio.',
             'apellido.string' => 'El apellido debe ser una cadena de texto.',
             'apellido.max' => 'El apellido no debe superar los 50 caracteres.',
+            'apellido.regex' => 'El apellido solo puede contener letras, espacios, punto, apóstrofo y guion.',
 
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.string' => 'El correo debe ser una cadena de texto.',
@@ -50,7 +55,7 @@ class ActualizarUsuarioRequest extends FormRequest
             'password.confirmed' => 'La confirmación de la contraseña no coincide.',
 
             'telefono.string' => 'El teléfono debe ser una cadena de texto.',
-            'telefono.max' => 'El teléfono no debe superar los 9 caracteres.',
+            'telefono.regex' => 'El teléfono debe tener 8 dígitos con el formato 0000-0000.',
             'telefono.unique' => 'Ya existe otro usuario con ese teléfono.'
         ];
     }

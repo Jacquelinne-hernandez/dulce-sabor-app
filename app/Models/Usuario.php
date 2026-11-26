@@ -95,13 +95,15 @@ class Usuario extends Authenticatable
             'nombre' => [
                 'required',
                 'string',
-                'max:50'
+                'max:50',
+                'regex:/^[\pL][\pL\s.\'\-]*$/u'
             ],
 
             'apellido' => [
                 'required',
                 'string',
-                'max:50'
+                'max:50',
+                'regex:/^[\pL][\pL\s.\'\-]*$/u'
             ],
 
             'email' => [
@@ -131,7 +133,7 @@ class Usuario extends Authenticatable
             'telefono' => [
                 'nullable',
                 'string',
-                'max:9',
+                'regex:/^\d{4}-\d{4}$/',
                 Rule::unique('usuarios', 'telefono')->ignore($id)
             ]
         ];
