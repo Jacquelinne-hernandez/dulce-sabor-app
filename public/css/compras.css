@@ -1,6 +1,6 @@
 /* ==========================================
    DULCE SABOR SYS - COMPRAS
-   Requiere theme.css + global.css.
+   Requiere theme.css + global.css + componentes.css.
    ========================================== */
 #modulo-compras,
 #modal-compras,
@@ -14,4 +14,16 @@
     --mod-glyph: "\f291";
 }
 #modulo-compras > .d-flex:first-child { background: var(--mod-hero); }
-#tabla-compras > tbody > tr > td:nth-child(6) { font-weight: 700; color: #c28815; }
+
+.compra-vencida > td:first-child { box-shadow: inset 4px 0 0 #d6335f; }
+
+.deuda-proveedores {
+    padding: .65rem .9rem;
+    background: #fff;
+    border: 1px solid var(--mod-border);
+    border-radius: var(--radio-sm);
+}
+.deuda-proveedores summary { cursor: pointer; font-weight: 600; color: var(--lila-oscuro); }
+
+#modal-compras-detalle h3 { color: var(--bs-body-color); font-weight: 700; }
+#lineas-compras select { min-width: 220px; }

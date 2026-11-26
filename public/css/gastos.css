@@ -1,0 +1,33 @@
+/* ==========================================
+   DULCE SABOR SYS - GASTOS
+   Requiere theme.css + global.css + componentes.css.
+   ========================================== */
+#modulo-gastos,
+#modal-gastos {
+    --mod-fg: #3d8f8f;
+    --mod-bg: #d6f1f0;
+    --mod-hero: linear-gradient(120deg, #f6fdfc 0%, #def4f2 55%, #c8ece9 100%);
+    --mod-border: #b6e2df;
+    --mod-thead: linear-gradient(180deg, #eefaf9, #d9f1ef);
+    --mod-tint: #f6fdfc;
+    --mod-glyph: "\f570";
+}
+#modulo-gastos > .d-flex:first-child { background: var(--mod-hero); }
+
+.gasto-anulado { opacity: .55; }
+.gasto-anulado td { text-decoration: line-through; }
+.gasto-anulado td:nth-child(6),
+.gasto-anulado td:last-child { text-decoration: none; }
+
+.gastos-por-tipo { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .35rem; }
+.gasto-chip {
+    display: inline-flex;
+    gap: .45rem;
+    align-items: baseline;
+    padding: .15rem .6rem;
+    font-size: .85rem;
+    color: var(--lila-oscuro);
+    background: var(--mod-bg);
+    border-radius: 999px;
+}
+.gasto-chip strong { font-weight: 700; }

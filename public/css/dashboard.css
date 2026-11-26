@@ -158,3 +158,90 @@
     .dash-metrica__valor { font-size: 1.5rem; }
     .dash-panel { padding: 1.1rem; }
 }
+
+/* ==========================================
+   FASE 4F: DASHBOARDS DE OPERADOR Y ADMINISTRADOR
+   ========================================== */
+#modulo-dashboard {
+    --mod-hero: linear-gradient(120deg, #f6f9ff 0%, #e6eeff 55%, #dce6ff 100%);
+    --serie-1: #257de0;   /* ventas  */
+    --serie-2: #f47230;   /* compras */
+    --serie-3: #00b894;   /* gastos  */
+}
+#modulo-dashboard > .d-flex:first-child { background: var(--mod-hero); }
+
+/* Tarjetas que son enlaces */
+a.dash-metrica { text-decoration: none; color: inherit; }
+.dash-metrica__sub { margin-top: .15rem; font-size: .76rem; line-height: 1.25; color: var(--lila-texto); }
+.dash-metrica--compacta .dash-metrica__valor { font-size: 1.45rem; }
+.dash-metrica--compacta { padding: .9rem 1rem; gap: .7rem; }
+.dash-metrica--compacta .ds-icono { width: 44px; height: 44px; flex-basis: 44px; }
+
+.dash-subtitulo { margin: 0 0 .4rem; font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--lila-texto); }
+.dash-filtro { padding: 1rem 1.2rem; }
+
+/* Estados con número grande */
+.dash-estados { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .6rem; }
+.dash-estado {
+    display: flex; flex-direction: column; gap: .1rem;
+    padding: .7rem .9rem;
+    background: #f7f4fb;
+    border-radius: var(--radio-md);
+    border-left: 4px solid var(--lila-medio);
+}
+.dash-estado strong { font-size: 1.35rem; line-height: 1.1; color: var(--lila-oscuro); }
+.dash-estado span { font-size: .8rem; color: var(--lila-texto); }
+.dash-estado--pendiente  { border-left-color: #f2a600; }
+.dash-estado--produccion { border-left-color: #4a63d6; }
+.dash-estado--lista      { border-left-color: #1f9d63; }
+.dash-estado--vencida    { border-left-color: #d6335f; }
+
+.dash-stock { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .55rem .8rem; background: #fffaf0; border: 1px solid #f7e2b5; border-radius: var(--radio-md); }
+
+/* Tablas de resultados */
+.dash-resultados > tbody > tr > td { padding: .55rem .25rem; background: transparent; color: var(--lila-oscuro); border-color: #f1e7f6; }
+.dash-resultados__menor > td { color: var(--lila-texto) !important; font-size: .92rem; }
+.dash-resultados__subtotal > td { font-weight: 700; border-top: 2px solid #e3d3ee !important; }
+.dash-resultados__total > td { font-weight: 700; font-size: 1.15rem; border-top: 2px solid var(--lila-boton) !important; border-bottom: 0; }
+
+/* Barras de gastos por tipo */
+.dash-barra { display: grid; grid-template-columns: 110px 1fr 90px; align-items: center; gap: .7rem; padding: .35rem 0; font-size: .9rem; color: var(--lila-oscuro); }
+.dash-barra__pista { height: 10px; background: #f1e9f6; border-radius: 999px; overflow: hidden; }
+.dash-barra__relleno { display: block; height: 100%; min-width: 0; background: var(--serie-3); border-radius: 999px; }
+.dash-barra__valor { text-align: right; font-weight: 600; }
+
+/* Gráfica */
+#dash-grafica { width: 100%; }
+.dash-grafica__leyenda { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: .5rem; font-size: .85rem; color: var(--lila-oscuro); }
+.dash-grafica__item { display: inline-flex; align-items: center; gap: .4rem; }
+.dash-grafica__item i { width: 14px; height: 4px; border-radius: 2px; display: inline-block; }
+.dash-grafica__caja { position: relative; }
+.dash-grafica__caja svg { display: block; max-width: 100%; touch-action: pan-y; }
+.dash-grafica__rejilla { stroke: #ece3f2; stroke-width: 1; }
+.dash-grafica__texto { font-size: 11px; fill: var(--lila-texto); }
+.dash-grafica__guia { stroke: #b9a4c9; stroke-width: 1; stroke-dasharray: 3 3; }
+.dash-grafica__punto { stroke: #fff; stroke-width: 2; }
+.dash-grafica__tooltip {
+    position: absolute; z-index: 3; min-width: 160px; padding: .55rem .75rem;
+    font-size: .82rem; color: var(--lila-oscuro);
+    background: #fff; border: 1px solid #e3d3ee; border-radius: var(--radio-md);
+    box-shadow: var(--sombra-media); pointer-events: none;
+}
+.dash-grafica__tooltip[hidden] { display: none; }
+.dash-grafica__tooltip div { display: flex; align-items: center; gap: .45rem; margin-top: .2rem; }
+.dash-grafica__tooltip div i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dash-grafica__tooltip div span { flex: 1; }
+
+.dash-tabla-datos summary { cursor: pointer; font-weight: 600; color: var(--lila-oscuro); }
+.dash-tabla-datos__scroll { max-height: 260px; overflow: auto; margin-top: .6rem; }
+
+/* En móvil el contenido va de borde a borde (igual que el encabezado): sin gutter negativo. */
+@media (max-width: 767.98px) {
+    #modulo-dashboard > .row { --bs-gutter-x: 0; margin-left: 0; margin-right: 0; }
+    #modulo-dashboard > .row > * { padding-left: 0; padding-right: 0; }
+}
+
+@media (max-width: 575.98px) {
+    .dash-barra { grid-template-columns: 90px 1fr 74px; gap: .5rem; }
+    .dash-metrica--compacta .dash-metrica__valor { font-size: 1.25rem; }
+}
