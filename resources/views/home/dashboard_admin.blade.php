@@ -29,7 +29,7 @@
         ['Gastos', $d($r['gastos']), 'Gastos adicionales', 'fa-file-invoice', 'warning', ''],
         ['Utilidad neta', $d($r['utilidad_neta']), 'Después de gastos', 'fa-scale-balanced', 'primary', $neg($r['utilidad_neta'])],
         ['Cobrado', $d($f['cobrado']), 'Efectivo + tarjeta', 'fa-cash-register', 'secondary', ''],
-        ['Flujo de caja', $d($f['neto']), 'Cobrado − proveedores − gastos', 'fa-money-bill-transfer', 'dark', $neg($f['neto'])],
+        ['Flujo de caja', $d($f['neto']), 'Cobrado + ingresos externos − proveedores − gastos', 'fa-money-bill-transfer', 'dark', $neg($f['neto'])],
     ];
 @endphp
 
@@ -132,6 +132,7 @@
                     <tbody>
                         <tr><td>Cobrado en efectivo</td><td class="text-end">{{ $d($f['cobrado_efectivo']) }}</td></tr>
                         <tr><td>Cobrado con tarjeta</td><td class="text-end">{{ $d($f['cobrado_tarjeta']) }}</td></tr>
+                        <tr><td>+ Ingresos externos <span class="texto-pequeno">(capital, inversiones)</span></td><td class="text-end">{{ $d($f['ingresos_externos'] ?? 0) }}</td></tr>
                         <tr class="dash-resultados__menor"><td>− Pagado a proveedores</td><td class="text-end">{{ $d($f['pagado_proveedores']) }}</td></tr>
                         <tr class="dash-resultados__menor"><td>− Gastos</td><td class="text-end">{{ $d($f['gastos']) }}</td></tr>
                         <tr class="dash-resultados__total"><td>Flujo neto</td><td class="text-end {{ $neg($f['neto']) }}">{{ $d($f['neto']) }}</td></tr>

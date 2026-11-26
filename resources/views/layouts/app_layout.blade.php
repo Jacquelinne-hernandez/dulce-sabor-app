@@ -166,6 +166,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a class="app-nav-link {{ $activo('ingresos', 'ingresos.*') }}" href="{{ route('ingresos') }}">
+                                    <i class="fa-solid fa-hand-holding-dollar fa-fw me-2"></i>Ingresos
+                                </a>
+                            </li>
+                            <li>
                                 <a class="app-nav-link {{ $activo('proveedores', 'proveedores.*') }}" href="{{ route('proveedores') }}">
                                     <i class="fa-solid fa-truck fa-fw me-2"></i>Proveedores
                                 </a>

@@ -23,6 +23,7 @@
             ['Productos', 'Catálogo, precios y existencias.', 'productos', 'fa-cake-candles'],
             ['Compras', 'Registrar compras a proveedores.', 'compras', 'fa-basket-shopping'],
             ['Gastos', 'Arrendamiento, luz, agua y otros gastos.', 'gastos', 'fa-file-invoice'],
+            ['Ingresos', 'Capital, inversiones y otros aportes externos.', 'ingresos', 'fa-hand-holding-dollar'],
         ]];
         $secciones[] = ['Administración', 'Equipo y control', 'administracion', [
             ['Usuarios', 'Cuentas del personal del sistema.', 'usuarios', 'fa-user-gear'],

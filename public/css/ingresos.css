@@ -1,0 +1,33 @@
+/* ==========================================
+   DULCE SABOR SYS - INGRESOS EXTERNOS
+   Requiere theme.css + global.css + componentes.css.
+   ========================================== */
+#modulo-ingresos,
+#modal-ingresos {
+    --mod-fg: #2f9e6b;
+    --mod-bg: #d8f5e6;
+    --mod-hero: linear-gradient(120deg, #f6fdf9 0%, #def6ea 55%, #c9eedb 100%);
+    --mod-border: #b8e6cf;
+    --mod-thead: linear-gradient(180deg, #eefaf4, #d9f3e6);
+    --mod-tint: #f6fdf9;
+    --mod-glyph: "\f4c0";
+}
+#modulo-ingresos > .d-flex:first-child { background: var(--mod-hero); }
+
+.ingreso-anulado { opacity: .55; }
+.ingreso-anulado td { text-decoration: line-through; }
+.ingreso-anulado td:nth-child(6),
+.ingreso-anulado td:last-child { text-decoration: none; }
+
+.ingresos-por-tipo { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .35rem; }
+.ingreso-chip {
+    display: inline-flex;
+    gap: .45rem;
+    align-items: baseline;
+    padding: .15rem .6rem;
+    font-size: .85rem;
+    color: var(--lila-oscuro);
+    background: var(--mod-bg);
+    border-radius: 999px;
+}
+.ingreso-chip strong { font-weight: 700; }

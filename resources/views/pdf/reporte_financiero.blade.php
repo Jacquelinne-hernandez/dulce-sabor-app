@@ -93,6 +93,7 @@
     <tr><td>Cobrado a clientes</td><td class="derecha">{{ $d($caja['cobrado']) }}</td></tr>
     <tr class="sangria"><td class="gris">En efectivo</td><td class="derecha gris">{{ $d($caja['cobrado_efectivo']) }}</td></tr>
     <tr class="sangria"><td class="gris">Con tarjeta</td><td class="derecha gris">{{ $d($caja['cobrado_tarjeta']) }}</td></tr>
+    <tr><td>(+) Ingresos externos (capital, inversiones, aportes)</td><td class="derecha">{{ $d($caja['ingresos_externos'] ?? 0) }}</td></tr>
     <tr><td>(-) Pagos a proveedores</td><td class="derecha">{{ $d($caja['pagado_proveedores']) }}</td></tr>
     <tr><td>(-) Gastos adicionales</td><td class="derecha">{{ $d($caja['gastos']) }}</td></tr>
     <tr class="subtotal"><td>FLUJO NETO</td><td class="derecha">{{ $d($caja['neto']) }}</td></tr>
