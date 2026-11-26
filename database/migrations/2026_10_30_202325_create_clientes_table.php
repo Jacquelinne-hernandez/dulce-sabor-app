@@ -18,14 +18,22 @@ return new class extends Migration
                 ->default(1)
                 ->constrained('estados');
 
-            $table->string('nombre', 100);
+            // Código único del cliente (el que se imprime en su tarjeta).
+            $table->string('codigo', 20)->unique();
+
+            $table->string('nombre', 50);
+            $table->string('apellido', 50);
+
+            // Datos de contacto opcionales.
             $table->string('telefono', 20)->nullable();
             $table->string('correo', 100)->nullable()->unique();
 
             $table->date('fecha_registro')->nullable();
-            $table->integer('puntos')->default(0);
+            $table->unsignedInteger('puntos')->default(0);
 
             $table->timestamps();
+
+            $table->index(['nombre', 'apellido']);
         });
     }
 

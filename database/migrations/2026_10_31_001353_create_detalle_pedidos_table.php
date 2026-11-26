@@ -24,6 +24,11 @@ return new class extends Migration
 
             $table->unsignedInteger('cantidad');
             $table->decimal('precio_unitario', 10, 2);
+
+            // Costo del producto al momento de vender: permite calcular
+            // la utilidad histórica aunque el costo cambie después.
+            $table->decimal('costo_unitario', 10, 2)->default(0);
+
             $table->decimal('subtotal', 10, 2);
 
             $table->timestamps();

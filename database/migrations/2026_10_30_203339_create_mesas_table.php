@@ -18,6 +18,10 @@ return new class extends Migration
             $table->integer('numero')->unique();
             $table->integer('capacidad');
 
+            // Tarifa por hora que se cobra cuando la mesa se reserva
+            // para un evento (la define el administrador).
+            $table->decimal('tarifa_hora', 8, 2)->default(0);
+
             $table->enum('estado', [
                 'disponible',
                 'reservada',

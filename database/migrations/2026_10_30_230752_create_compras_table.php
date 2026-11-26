@@ -26,11 +26,30 @@ return new class extends Migration
 
             $table->decimal('total', 10, 2)->default(0);
 
+            // Condición de pago: al contado o a crédito (genera deuda
+            // con el proveedor, que se salda con abonos).
+            $table->enum('condicion_pago', [
+                'contado',
+                'credito',
+            ])->default('contado');
+
+            $table->date('fecha_vencimiento')->nullable();
+
+            $table->decimal('monto_pagado', 10, 2)->default(0);
+
+            $table->enum('estado_pago', [
+                'pendiente',
+                'parcial',
+                'pagada',
+            ])->default('pagada');
+
             $table->enum('estado', [
                 'completada',
             ])->default('completada');
 
             $table->timestamps();
+
+            $table->index(['estado_pago', 'fecha_vencimiento']);
         });
     }
 

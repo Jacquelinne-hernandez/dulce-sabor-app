@@ -18,7 +18,11 @@ return new class extends Migration
                 ->constrained('categorias');
 
             $table->string('nombre', 100)->unique();
+
+            // Precio de venta (IVA incluido) y costo (promedio ponderado
+            // de las compras), para poder calcular la ganancia.
             $table->decimal('precio', 10, 2);
+            $table->decimal('costo', 10, 2)->default(0);
 
             $table->unsignedInteger('stock')->default(0);
             $table->unsignedInteger('stock_minimo')->default(0);

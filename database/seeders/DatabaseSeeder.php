@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             UsuarioSeeder::class,
             HorarioSeeder::class,
             CategoriaSeeder::class,
+            CorrelativoSeeder::class,
+            ProveedorSeeder::class,
         ]);
     }
 }
