@@ -8,8 +8,40 @@
 #modal-clientes {
     --mod-fg: #8a5cc4;
     --mod-bg: #ece0fb;
+    --mod-hero: linear-gradient(120deg, #fbf8ff 0%, #f0e7fc 55%, #e5d6fa 100%);
+    --mod-border: #dccaf5;
+    --mod-thead: linear-gradient(180deg, #f6f0fe, #ebdffb);
+    --mod-tint: #fbf8ff;
     --mod-glyph: "\f0c0";
 }
 
-/* columna "Puntos" como etiqueta */
-#tabla-clientes > tbody > tr > td:nth-child(4) { font-weight: 700; color: var(--lila-hover); }
+#modulo-clientes > .d-flex:first-child { background: var(--mod-hero); }
+
+/* Código tipo tarjeta de cliente */
+.cliente-codigo-chip {
+    display: inline-block;
+    padding: .25rem .8rem;
+    font-family: var(--font-principal);
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: #6f3fb0;
+    background: #ece0fb;
+    border: 1.5px solid #fff;
+    border-radius: var(--radio-pill);
+    box-shadow: 0 4px 10px rgba(138, 92, 196, .15);
+}
+
+.cliente-codigo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.1rem;
+    padding: .8rem 1.1rem;
+    background: #f6f0fe;
+    border: 1.5px dashed #dccaf5;
+    border-radius: var(--radio-md);
+}
+.cliente-codigo__titulo { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--lila-texto); }
+.cliente-codigo__valor { font-size: 1.15rem; font-weight: 700; letter-spacing: .08em; color: #6f3fb0; }

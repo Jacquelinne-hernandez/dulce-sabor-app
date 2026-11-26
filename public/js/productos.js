@@ -10,6 +10,11 @@ $(function () {
         form: '#form-productos',
         tituloNuevo: 'Nuevo producto',
         tituloEditar: 'Editar producto',
+        antesDeEnviar: function (datos) {
+            delete datos.imagen;
+
+            return datos;
+        },
         eliminar: {
             titulo: 'Inactivar producto',
             boton: 'Inactivar',
@@ -33,7 +38,10 @@ $(function () {
             return '<tr>' +
                 '<td class="fw-semibold">' + App.esc(p.nombre) + '</td>' +
                 '<td>' + App.esc(p.categoria ? p.categoria.nombre : '—') + '</td>' +
-                '<td>' + App.dinero(p.precio) + '</td>' +
+                '<td><span>' + App.dinero(p.precio) +
+                (p.costo !== undefined && p.costo !== null
+                    ? ' <small class="texto-pequeno fw-normal">costo ' + App.dinero(p.costo) + '</small>' : '') +
+                '</span></td>' +
                 '<td>' + p.stock +
                 (bajo ? ' <span class="badge text-bg-warning" title="Stock mínimo: ' + p.stock_minimo + '">Bajo</span>' : '') +
                 '</td>' +

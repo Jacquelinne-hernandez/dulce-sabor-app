@@ -175,3 +175,18 @@
     height: 38px;
     font-size: .92rem;
 }
+
+
+/* Tarifa por hora (Fase 4): sexta celda, se muestra antes del pie de la tarjeta */
+#tabla-mesas > tbody > tr > td:nth-child(5) { order: 9; }
+#tabla-mesas > tbody > tr > td:nth-child(6)::before {
+    content: "Tarifa por hora";
+    font-family: var(--font-principal);
+    font-weight: 600;
+    font-size: .98rem;
+    color: var(--lila-texto);
+}
+#tabla-mesas > tbody > tr > td:nth-child(6) {
+    font-weight: 700;
+    color: var(--mesa-fg);
+}

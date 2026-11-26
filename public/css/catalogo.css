@@ -1,0 +1,80 @@
+/* ==========================================
+   DULCE SABOR SYS - CATÁLOGO (solo lectura)
+   Requiere theme.css + global.css.
+   ========================================== */
+#modulo-catalogo {
+    --mod-fg: #d6336c;
+    --mod-bg: #ffd9e8;
+    --mod-hero: linear-gradient(120deg, #fff6fa 0%, #ffe3ef 55%, #ffd0e4 100%);
+    --mod-glyph: "\f518";
+}
+
+#modulo-catalogo > .d-flex:first-child { background: var(--mod-hero); }
+
+#modulo-catalogo > .card { margin-bottom: 1.2rem; }
+
+.cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.2rem;
+}
+
+.cat-vacio {
+    grid-column: 1 / -1;
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--lila-texto);
+    background: rgba(255, 255, 255, .95);
+    border-radius: var(--radio-lg);
+    box-shadow: var(--sombra-suave);
+}
+
+.cat-tarjeta {
+    --cat-acento: #1f9d63;
+    display: flex;
+    flex-direction: column;
+    padding: 1.2rem 1.3rem 1.1rem;
+    background: rgba(255, 255, 255, .97);
+    border: 1.5px solid #fff;
+    border-top: 5px solid var(--cat-acento);
+    border-radius: var(--radio-lg);
+    box-shadow: var(--sombra-suave);
+    transition: transform var(--transicion), box-shadow var(--transicion);
+}
+.cat-tarjeta:hover { transform: translateY(-4px); box-shadow: var(--sombra-media); }
+.cat-tarjeta--bajo { --cat-acento: #d99a1b; }
+.cat-tarjeta--agotado { --cat-acento: #d6335f; }
+
+.cat-tarjeta__cabeza { display: flex; align-items: center; justify-content: space-between; margin-bottom: .8rem; }
+.cat-tarjeta__icono {
+    width: 46px; height: 46px;
+    display: grid; place-items: center;
+    color: #d6336c;
+    background: radial-gradient(circle at 30% 25%, #fff 0%, #ffd9e8 80%);
+    border: 2.5px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 6px 14px rgba(214, 51, 108, .16);
+}
+
+.cat-tarjeta__nombre { margin: 0; font-family: var(--font-elegante); font-size: 1.25rem; font-weight: 700; }
+.cat-tarjeta__categoria { font-size: .82rem; font-weight: 600; color: var(--lila-texto); }
+.cat-tarjeta__descripcion { margin: .6rem 0 0; font-size: .88rem; color: var(--lila-texto); }
+
+.cat-tarjeta__pie {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: .9rem;
+    border-top: 1px dashed #f3d6e4;
+}
+.cat-tarjeta__etiqueta { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--lila-texto); }
+.cat-tarjeta__precio { font-size: 1.3rem; font-weight: 800; color: #d6336c; }
+.cat-tarjeta__stock { font-size: 1.3rem; font-weight: 800; color: var(--lila-oscuro); }
+
+.cat-tarjeta--bajo .cat-tarjeta__stock { color: #b7791f; }
+.cat-tarjeta--agotado .cat-tarjeta__stock { color: #d6335f; }
+
+@media (max-width: 575.98px) {
+    .cat-grid { grid-template-columns: 1fr; }
+}

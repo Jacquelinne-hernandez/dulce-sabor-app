@@ -1,0 +1,185 @@
+/* ==========================================
+   DULCE SABOR SYS - COMPONENTES COMPARTIDOS
+   Piezas reutilizables de las vistas de operación.
+   Requiere theme.css + global.css.
+   ========================================== */
+
+/* ---------- Buscador de clientes ---------- */
+.sel-cliente { position: relative; }
+.sel-cliente__buscar { position: relative; }
+.sel-cliente__ayuda { display: block; margin-top: .35rem; color: var(--lila-texto); font-size: .82rem; }
+
+.sel-cliente__resultados {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: .35rem;
+    background: #fff;
+    border: 1.5px solid var(--lila-borde);
+    border-radius: var(--radio-md);
+    box-shadow: var(--sombra-media);
+}
+.sel-cliente__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: .55rem .8rem;
+    text-align: left;
+    color: var(--lila-oscuro);
+    background: transparent;
+    border: 0;
+    border-radius: var(--radio-sm);
+}
+.sel-cliente__item small { color: var(--lila-texto); }
+.sel-cliente__item:hover, .sel-cliente__item:focus { background: var(--lila-suave); outline: 0; }
+.sel-cliente__vacio { padding: .8rem; text-align: center; color: var(--lila-texto); font-size: .9rem; }
+
+.sel-cliente__elegido {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .6rem .8rem;
+    background: var(--lila-tenue);
+    border: 1.5px solid var(--lila-borde);
+    border-radius: var(--radio-md);
+}
+.sel-cliente__avatar {
+    width: 38px; height: 38px; flex: 0 0 38px;
+    display: grid; place-items: center;
+    color: #8a5cc4;
+    background: radial-gradient(circle at 30% 25%, #fff 0%, #ece0fb 80%);
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+.sel-cliente__datos { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.sel-cliente__datos strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sel-cliente__datos small { color: var(--lila-texto); }
+.sel-cliente__quitar { margin-left: auto; padding: .25rem .6rem; border-radius: var(--radio-pill); }
+
+/* ---------- Caja de totales (cotizaciones) ---------- */
+.caja-totales {
+    padding: 1rem 1.2rem;
+    background: var(--lila-tenue);
+    border: 1.5px dashed var(--lila-borde);
+    border-radius: var(--radio-md);
+}
+.caja-totales__fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .25rem 0;
+    color: var(--lila-oscuro);
+    font-size: .95rem;
+}
+.caja-totales__fila span:first-child { color: var(--lila-texto); }
+.caja-totales__fila--total {
+    margin-top: .4rem;
+    padding-top: .65rem;
+    border-top: 1.5px solid var(--lila-borde);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+.caja-totales__fila--total span:first-child { color: var(--lila-oscuro); }
+.caja-totales__fila--descuento span:last-child { color: #1f9d63; font-weight: 600; }
+
+/* ---------- Datos clave en bloques ---------- */
+.dato-clave {
+    padding: .8rem 1rem;
+    background: #fff;
+    border: 1.5px solid #f3e6f9;
+    border-radius: var(--radio-md);
+    height: 100%;
+}
+.dato-clave__titulo { font-size: .76rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--lila-texto); }
+.dato-clave__valor { margin-top: .15rem; font-size: 1.1rem; font-weight: 700; color: var(--lila-oscuro); }
+
+/* ---------- Línea de tiempo (trazabilidad de estados) ---------- */
+.linea-tiempo { list-style: none; margin: 0; padding: 0 0 0 1.4rem; position: relative; }
+.linea-tiempo::before {
+    content: "";
+    position: absolute;
+    left: 5px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--lila-borde);
+}
+.linea-tiempo__item { position: relative; padding: 0 0 1rem .8rem; }
+.linea-tiempo__item:last-child { padding-bottom: 0; }
+.linea-tiempo__item::before {
+    content: "";
+    position: absolute;
+    left: -1.4rem; top: .35rem;
+    width: 12px; height: 12px;
+    background: var(--lila-boton);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--lila-borde);
+}
+.linea-tiempo__titulo { font-weight: 600; color: var(--lila-oscuro); }
+.linea-tiempo__sub { font-size: .82rem; color: var(--lila-texto); }
+
+/* ---------- Pasos del flujo de una orden ---------- */
+.pasos { display: flex; align-items: center; gap: .35rem; flex-wrap: wrap; }
+.pasos__paso {
+    display: inline-flex; align-items: center; gap: .35rem;
+    padding: .25rem .7rem;
+    font-size: .78rem; font-weight: 600;
+    color: var(--lila-texto);
+    background: #f3e9f9;
+    border-radius: var(--radio-pill);
+}
+.pasos__paso.is-hecho { color: var(--tono-success-fg); background: var(--tono-success-bg); }
+.pasos__paso.is-actual { color: #fff; background: var(--lila-boton); }
+.pasos__sep { color: var(--lila-medio); font-size: .7rem; }
+
+/* ---------- Alternador de opciones (tarjetas pequeñas) ---------- */
+.opcion-tarjeta { position: relative; }
+.opcion-tarjeta input { position: absolute; opacity: 0; pointer-events: none; }
+.opcion-tarjeta label {
+    display: flex; align-items: center; gap: .6rem;
+    width: 100%; margin: 0;
+    padding: .75rem 1rem;
+    font-weight: 600;
+    color: var(--lila-oscuro);
+    background: var(--lila-claro);
+    border: 1.5px solid var(--lila-borde);
+    border-radius: var(--radio-md);
+    cursor: pointer;
+    transition: border-color var(--transicion), background var(--transicion), box-shadow var(--transicion);
+}
+.opcion-tarjeta label i { color: var(--lila-boton); }
+.opcion-tarjeta input:checked + label {
+    background: var(--lila-suave);
+    border-color: var(--lila-boton);
+    box-shadow: 0 0 0 .2rem rgba(169, 75, 193, .15);
+}
+.opcion-tarjeta input:focus-visible + label { box-shadow: 0 0 0 .22rem rgba(169, 75, 193, .35); }
+
+/* ---------- Pestañas de filtro rápido ---------- */
+.filtro-rapido { display: flex; flex-wrap: wrap; gap: .4rem; }
+.filtro-rapido .btn {
+    padding: .35rem .95rem;
+    font-size: .85rem;
+    border: 1.5px solid var(--lila-borde);
+    color: var(--lila-hover);
+    background: #fff;
+}
+.filtro-rapido .btn.is-activo {
+    color: #fff;
+    background: var(--lila-boton);
+    border-color: var(--lila-boton);
+}
+
+/* ---------- Resumen en columnas pequeñas ---------- */
+.texto-monto { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.texto-pequeno { font-size: .82rem; color: var(--lila-texto); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 575.98px) {
+    .caja-totales__fila--total { font-size: 1.05rem; }
+    .filtro-rapido .btn { flex: 1 1 auto; }
+}

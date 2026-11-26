@@ -38,6 +38,7 @@ $(function () {
                 '<select class="form-select form-select-sm" data-cambiar-estado data-id="' + m.id + '" ' +
                 'aria-label="Cambiar estado de la mesa ' + m.numero + '">' + opciones + '</select></td>' +
                 '<td class="text-end">' + (ctx.puedeEditar ? App.botonesCrud(m.id, { eliminar: false }) : '') + '</td>' +
+                '<td>' + App.dinero(m.tarifa_hora) + ' / hora</td>' +
                 '</tr>';
         }
     });

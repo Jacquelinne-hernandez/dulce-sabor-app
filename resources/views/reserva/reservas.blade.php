@@ -4,20 +4,24 @@
 @push('estilos')
     <link rel="stylesheet" href="{{ asset('css/reservas.css') }}">
 @endpush
+
 @section('contenido')
 <div id="modulo-reservas"
      data-url-todos="{{ route('reservas.todos') }}"
+     data-url-buscar="{{ route('reservas.buscar', ['id' => '__ID__']) }}"
      data-url-insertar="{{ route('reservas.insertar') }}"
-     data-url-fecha="{{ route('reservas.fecha') }}"
-     data-url-estado="{{ route('reservas.estado') }}"
-     data-url-actualizar-estado="{{ route('reservas.actualizarEstado', ['id' => '__ID__']) }}">
+     data-url-mesas-disponibles="{{ route('reservas.mesasDisponibles') }}"
+     data-url-cotizar="{{ route('reservas.cotizar') }}"
+     data-url-clientes="{{ route('clientes.filtrar') }}"
+     data-url-estado="{{ route('reservas.actualizarEstado', ['id' => '__ID__']) }}"
+     data-url-pedidos="{{ route('pedidos') }}">
 
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <div>
             <h1 class="h3 mb-0"><i class="fa-solid fa-calendar-check me-2"></i>Reservas</h1>
-            <p class="text-muted mb-0">Reservas de mesas. Solo se aceptan dentro del horario de atención y sin traslapes.</p>
+            <p class="text-muted mb-0">Reserve una o varias mesas para un cliente registrado. Se cobra la tarifa por hora de cada mesa.</p>
         </div>
-        <button type="button" class="btn btn-primary" data-accion="nuevo">
+        <button type="button" class="btn btn-primary" id="btn-nueva-reserva">
             <i class="fa-solid fa-plus me-1"></i>Nueva reserva
         </button>
     </div>
@@ -25,25 +29,25 @@
     <div class="card shadow-sm">
         <div class="card-header bg-white">
             <div class="row g-2 align-items-center">
-                <div class="col-md-5 col-lg-4">
-                    <input type="search" class="form-control" placeholder="Buscar..."
-                           data-filtro="#tabla-reservas" aria-label="Buscar">
+                <div class="col-md-4 col-lg-4">
+                    <input type="search" class="form-control" id="reservas-buscar"
+                           placeholder="Buscar cliente, código o mesa..." aria-label="Buscar">
                 </div>
-                <div class="col-md-3 col-lg-2">
-                    <input type="date" class="form-control" id="filtro-fecha-reservas" aria-label="Filtrar por fecha">
-                </div>
-                <div class="col-md-4 col-lg-3">
-                    <select class="form-select" id="filtro-estado-reservas" aria-label="Filtrar por estado">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <select class="form-select" id="reservas-filtro-estado" aria-label="Filtrar por estado">
                         <option value="">Todos los estados</option>
                         <option value="pendiente">Pendiente</option>
                         <option value="confirmada">Confirmada</option>
-                        <option value="cancelada">Cancelada</option>
                         <option value="atendida">Atendida</option>
+                        <option value="cancelada">Cancelada</option>
                     </select>
                 </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-outline-secondary" id="limpiar-filtros-reservas" title="Limpiar filtros">
-                        <i class="fa-solid fa-rotate-left"></i>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <input type="date" class="form-control" id="reservas-filtro-fecha" aria-label="Filtrar por fecha">
+                </div>
+                <div class="col-12 col-lg-2 text-lg-end">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="reservas-limpiar">
+                        <i class="fa-solid fa-rotate-left me-1"></i>Limpiar
                     </button>
                 </div>
             </div>
@@ -56,10 +60,10 @@
                         <th>Fecha</th>
                         <th>Horario</th>
                         <th>Cliente</th>
-                        <th>Mesa</th>
+                        <th>Mesas</th>
                         <th>Personas</th>
+                        <th>Cobro mesas</th>
                         <th>Estado</th>
-                        <th>Observaciones</th>
                         <th class="text-end">Acciones</th>
                     </tr>
                 </thead>
@@ -68,66 +72,81 @@
         </div>
     </div>
 
+    {{-- Nueva reserva --}}
     <div class="modal fade" id="modal-reservas" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title h5" data-titulo-modal>Nueva reserva</h2>
+                    <h2 class="modal-title h5">Nueva reserva</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
                     <form id="form-reservas" novalidate>
                         <div class="alert alert-danger d-none" role="alert" data-errores></div>
+
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="reservas-id_cliente" class="form-label">Cliente <span class="text-danger">*</span></label>
-                                <select class="form-select" id="reservas-id_cliente" name="id_cliente" required>
-                                    <option value="">Seleccione...</option>
-                            @foreach($clientes as $cliente)
-                                    <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
-                                @endforeach
-                                </select>
+                            <div class="col-12">
+                                <label class="form-label">Cliente <span class="text-danger">*</span></label>
+                                <div id="reservas-cliente"></div>
+                                <div class="form-text">Las reservas solo se hacen a clientes registrados.</div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="reservas-id_mesa" class="form-label">Mesa <span class="text-danger">*</span></label>
-                                <select class="form-select" id="reservas-id_mesa" name="id_mesa" required>
-                                    <option value="">Seleccione...</option>
-                            @foreach($mesas as $mesa)
-                                    <option value="{{ $mesa->id }}">Mesa {{ $mesa->numero }} (capacidad {{ $mesa->capacidad }})</option>
-                                @endforeach
-                                </select>
-                            </div>
+
                             <div class="col-md-4">
                                 <label for="reservas-fecha" class="form-label">Fecha <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="reservas-fecha" name="fecha" required>
                             </div>
-                            <div class="col-md-4">
-                                <label for="reservas-hora_inicio" class="form-label">Hora de inicio <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" id="reservas-hora_inicio" name="hora_inicio" required>
+                            <div class="col-6 col-md-3">
+                                <label for="reservas-hora-inicio" class="form-label">Desde <span class="text-danger">*</span></label>
+                                <input type="time" class="form-control" id="reservas-hora-inicio" name="hora_inicio" required>
                             </div>
-                            <div class="col-md-4">
-                                <label for="reservas-hora_fin" class="form-label">Hora de fin <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" id="reservas-hora_fin" name="hora_fin" required>
+                            <div class="col-6 col-md-3">
+                                <label for="reservas-hora-fin" class="form-label">Hasta <span class="text-danger">*</span></label>
+                                <input type="time" class="form-control" id="reservas-hora-fin" name="hora_fin" required>
                             </div>
-                            <div class="col-md-6">
-                                <label for="reservas-cantidad_personas" class="form-label">Cantidad de personas <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="reservas-cantidad_personas" name="cantidad_personas" required min="1" step="1">
+                            <div class="col-md-2">
+                                <label for="reservas-personas" class="form-label">Personas <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="reservas-personas" name="cantidad_personas" min="1" step="1" required>
                             </div>
+
                             <div class="col-12">
-                                <label for="reservas-observaciones" class="form-label">Observaciones</label>
-                                <textarea class="form-control" id="reservas-observaciones" name="observaciones" rows="3"></textarea>
+                                <label class="form-label">Mesas disponibles <span class="text-danger">*</span></label>
+                                <div id="reservas-mesas" class="reserva-mesas">
+                                    <div class="reserva-mesas__aviso">Indique la fecha y el horario para ver las mesas libres.</div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-none" id="reservas-cotizacion"></div>
+
+                            <div class="col-12">
+                                <label for="reservas-observaciones" class="form-label">Observaciones <span class="texto-pequeno">(opcional)</span></label>
+                                <textarea class="form-control" id="reservas-observaciones" name="observaciones" rows="2" maxlength="500"></textarea>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" form="form-reservas" class="btn btn-primary">Guardar</button>
+                    <button type="submit" form="form-reservas" class="btn btn-primary">Guardar reserva</button>
                 </div>
             </div>
         </div>
     </div>
 
+    {{-- Detalle --}}
+    <div class="modal fade" id="modal-reservas-detalle" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5">Detalle de la reserva</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="reservas-detalle-cuerpo"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 

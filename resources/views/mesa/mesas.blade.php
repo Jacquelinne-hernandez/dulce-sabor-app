@@ -59,6 +59,7 @@
                         <th>Estado</th>
                         <th>Cambiar estado</th>
                         <th class="text-end">Acciones</th>
+                        <th>Tarifa / hora</th>
                     </tr>
                     </thead>
                     <tbody></tbody>
@@ -85,6 +86,11 @@
                                     <div class="col-md-6">
                                         <label for="mesas-capacidad" class="form-label">Capacidad (personas) <span class="text-danger">*</span></label>
                                         <input type="number" class="form-control" id="mesas-capacidad" name="capacidad" required min="1" step="1">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="mesas-tarifa" class="form-label">Tarifa por hora ($) <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="mesas-tarifa" name="tarifa_hora" required min="0" step="0.01" max="9999.99">
+                                        <div class="form-text">Se cobra al reservar la mesa; el tiempo se redondea hacia arriba a la media hora.</div>
                                     </div>
                                     <div class="col-12" id="grupo-mesas-estado">
                                         <label for="mesas-estado" class="form-label">Estado de la mesa</label>

@@ -11,6 +11,7 @@
         ['Operación', 'Del pedido a la mesa', 'operacion', [
             ['Dashboard', 'Resumen de la operación del día.', 'dashboard', 'fa-chart-line'],
             ['Pedidos', 'Registrar y dar seguimiento a los pedidos.', 'pedidos', 'fa-cart-shopping'],
+            ['Órdenes', 'Producción y entrega de los pedidos.', 'ordenes', 'fa-kitchen-set'],
             ['Facturas', 'Emitir facturas de pedidos entregados.', 'facturas', 'fa-file-invoice-dollar'],
             ['Reservas', 'Reservar mesas para los clientes.', 'reservas', 'fa-calendar-check'],
             ['Mesas', 'Consultar y cambiar el estado de las mesas.', 'mesas', 'fa-chair'],
@@ -21,11 +22,15 @@
         $secciones[] = ['Inventario', 'Ingredientes y creaciones', 'inventario', [
             ['Productos', 'Catálogo, precios y existencias.', 'productos', 'fa-cake-candles'],
             ['Compras', 'Registrar compras a proveedores.', 'compras', 'fa-basket-shopping'],
+            ['Gastos', 'Arrendamiento, luz, agua y otros gastos.', 'gastos', 'fa-file-invoice'],
         ]];
         $secciones[] = ['Administración', 'Equipo y control', 'administracion', [
             ['Usuarios', 'Cuentas del personal del sistema.', 'usuarios', 'fa-user-gear'],
             ['Bitácora', 'Auditoría de las acciones del sistema.', 'bitacora', 'fa-clipboard-list'],
         ]];
+    }
+    if (!$esAdmin) {
+        $secciones[0][3][] = ['Catálogo', 'Consultar precios y existencias.', 'productos.catalogo', 'fa-book-open'];
     }
 @endphp
 

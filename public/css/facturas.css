@@ -1,10 +1,12 @@
 /* ==========================================
    DULCE SABOR SYS - FACTURAS
-   Requiere theme.css + global.css.
+   Requiere theme.css + global.css + componentes.css.
    ========================================== */
 #modulo-facturas,
 #modal-facturas,
-#modal-facturas-detalle {
+#modal-facturas-pago,
+#modal-facturas-detalle,
+#modal-facturas-anular {
     --mod-fg: #c97a1e;
     --mod-bg: #ffe9cf;
     --mod-hero: linear-gradient(120deg, #fffaf4 0%, #ffeed9 55%, #ffe1bd 100%);
@@ -13,5 +15,27 @@
     --mod-tint: #fffaf4;
     --mod-glyph: "\f571";
 }
+#modal-facturas-anular { --mod-glyph: "\f05e"; --mod-fg: #d6335f; --mod-bg: #fddde6; }
 #modulo-facturas > .d-flex:first-child { background: var(--mod-hero); }
+
 #tabla-facturas > tbody > tr > td:nth-child(5) { font-weight: 700; color: #c97a1e; }
+
+.pago-cambio {
+    padding: .55rem .9rem;
+    color: var(--tono-success-fg);
+    background: var(--tono-success-bg);
+    border-radius: var(--radio-sm);
+}
+.pago-cambio strong { font-size: 1.1rem; }
+
+#modal-facturas-detalle .modal-footer { flex-wrap: wrap; }
+
+#facturas-detalle-cuerpo h3 { color: var(--bs-body-color); font-weight: 700; margin-bottom: .5rem; }
+
+/* Totales del detalle: filas compactas */
+#facturas-detalle-cuerpo tfoot td {
+    padding: .3rem .75rem;
+    border-bottom: 0;
+    line-height: 1.3;
+}
+#facturas-detalle-cuerpo tfoot tr:first-child td { border-top: 1px solid var(--mod-border); padding-top: .6rem; }

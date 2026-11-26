@@ -11,7 +11,8 @@
          data-url-buscar="{{ route('productos.buscar', ['id' => '__ID__']) }}"
          data-url-insertar="{{ route('productos.insertar') }}"
          data-url-actualizar="{{ route('productos.actualizar', ['id' => '__ID__']) }}"
-         data-url-eliminar="{{ route('productos.eliminar', ['id' => '__ID__']) }}">
+         data-url-eliminar="{{ route('productos.eliminar', ['id' => '__ID__']) }}"
+         data-url-reactivar="{{ route('productos.reactivar', ['id' => '__ID__']) }}">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
             <div>
                 <h1 class="h3 mb-0"><i class="fa-solid fa-cake-candles me-2"></i>Productos</h1>
@@ -64,17 +65,22 @@
                                     <input type="text" class="form-control" id="productos-nombre" name="nombre" maxlength="100" required>
                                 </div>
                                 <div class="col-md-5">
-                                    <label for="productos-categoria_id" class="form-label">Categoría <span class="text-danger">*</span></label>
-                                    <select class="form-select" id="productos-categoria_id" name="categoria_id" required>
+                                    <label for="productos-id_categoria" class="form-label">Categoría <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="productos-id_categoria" name="id_categoria" required>
                                         <option value="">Seleccione...</option>
                                         @foreach($categorias as $categoria)
                                             <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="productos-precio" class="form-label">Precio ($) <span class="text-danger">*</span></label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="productos-precio" name="precio" required>
+                                <div class="col-md-6">
+                                    <label for="productos-precio" class="form-label">Precio de venta ($) <span class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" min="0.01" class="form-control" id="productos-precio" name="precio" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="productos-costo" class="form-label">Costo ($) <span class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" min="0" class="form-control" id="productos-costo" name="costo" required>
+                                    <div class="form-text">Las compras lo recalculan con el costo promedio ponderado.</div>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="productos-stock" class="form-label">Stock <span class="text-danger">*</span></label>

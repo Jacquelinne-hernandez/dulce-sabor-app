@@ -235,3 +235,9 @@
     .home-seccion__encabezado::before, .home-seccion__encabezado::after { display: none; }
     .home-seccion__lema { border-left: 0; padding-left: 0; white-space: normal; }
 }
+
+
+/* Accesos agregados en la Fase 4 */
+.home-acceso--ordenes { --acc-bg: #ffe9cf; --acc-fg: #c97a1e; --acc-glow: rgba(255, 195, 130, .50); }
+.home-acceso--gastos { --acc-bg: #fddde6; --acc-fg: #d6335f; --acc-glow: rgba(255, 150, 185, .45); }
+.home-acceso--productos\.catalogo { --acc-bg: #ffd9e8; --acc-fg: #d6336c; --acc-glow: rgba(255, 145, 190, .45); }

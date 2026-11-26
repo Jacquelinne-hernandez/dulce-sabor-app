@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/componentes.css') }}">
     @stack('estilos')
 </head>
 <body class="app-body">
@@ -39,7 +40,7 @@
         </div>
 
         <div class="app-header__derecha">
-            <a class="app-campana" href="{{ route('pedidos') }}" aria-label="Pedidos">
+            <a class="app-campana" href="{{ route('ordenes') }}" aria-label="Órdenes por atender">
                 <i class="fa-regular fa-bell"></i>
                 @if($pendientes > 0)
                     <span class="app-campana__cuenta">{{ $pendientes }}</span>
@@ -100,6 +101,11 @@
                         <li>
                             <a class="app-nav-link {{ $activo('pedidos', 'pedidos.*') }}" href="{{ route('pedidos') }}">
                                 <i class="fa-solid fa-cart-shopping fa-fw me-2"></i>Pedidos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="app-nav-link {{ $activo('ordenes', 'ordenes.*') }}" href="{{ route('ordenes') }}">
+                                <i class="fa-solid fa-kitchen-set fa-fw me-2"></i>Órdenes
                                 @if($pendientes > 0)
                                     <span class="app-nav-link__cuenta">{{ $pendientes }}</span>
                                 @endif
@@ -125,6 +131,13 @@
                                 <i class="fa-solid fa-users fa-fw me-2"></i>Clientes
                             </a>
                         </li>
+                        @unless($esAdmin)
+                            <li>
+                                <a class="app-nav-link {{ $activo('productos.catalogo') }}" href="{{ route('productos.catalogo') }}">
+                                    <i class="fa-solid fa-book-open fa-fw me-2"></i>Catálogo
+                                </a>
+                            </li>
+                        @endunless
                     </ul>
 
                     @if($esAdmin)
@@ -143,6 +156,11 @@
                             <li>
                                 <a class="app-nav-link {{ $activo('compras', 'compras.*') }}" href="{{ route('compras') }}">
                                     <i class="fa-solid fa-basket-shopping fa-fw me-2"></i>Compras
+                                </a>
+                            </li>
+                            <li>
+                                <a class="app-nav-link {{ $activo('gastos', 'gastos.*') }}" href="{{ route('gastos') }}">
+                                    <i class="fa-solid fa-file-invoice fa-fw me-2"></i>Gastos
                                 </a>
                             </li>
                             <li>
@@ -223,6 +241,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 <script src="{{ asset('js/toast.js') }}"></script>
 <script src="{{ asset('js/global.js') }}"></script>
+<script src="{{ asset('js/extras.js') }}"></script>
 @stack('scripts')
 </body>
 </html>

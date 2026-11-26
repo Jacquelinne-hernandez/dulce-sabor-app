@@ -1,0 +1,104 @@
+/* ==========================================
+   DULCE SABOR SYS - ÓRDENES DE TRABAJO
+   Requiere theme.css + global.css + componentes.css + pedidos.css (etiqueta de tipo).
+   ========================================== */
+#modulo-ordenes {
+    --mod-fg: #c97a1e;
+    --mod-bg: #ffe9cf;
+    --mod-hero: linear-gradient(120deg, #fffaf4 0%, #ffeed9 55%, #ffe1bd 100%);
+    --mod-glyph: "\f7ec";
+}
+#modulo-ordenes > .d-flex:first-child { background: var(--mod-hero); }
+
+/* El resto de módulos define estas etiquetas en pedidos.css; se repiten aquí
+   para que esta pantalla no dependa de que se haya cargado esa hoja. */
+#modulo-ordenes .pedido-tipo {
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .3rem .8rem; font-size: .8rem; font-weight: 600; white-space: nowrap;
+    border-radius: var(--radio-pill);
+}
+#modulo-ordenes .pedido-tipo--local { color: var(--tono-primary-fg); background: var(--tono-primary-bg); }
+#modulo-ordenes .pedido-tipo--llevar { color: var(--tono-info-fg); background: var(--tono-info-bg); }
+#modulo-ordenes .pedido-tipo--reserva { color: var(--tono-success-fg); background: var(--tono-success-bg); }
+
+.orden-vacio {
+    padding: 2.2rem 1rem;
+    text-align: center;
+    color: var(--lila-texto);
+    background: rgba(255, 255, 255, .95);
+    border-radius: var(--radio-lg);
+    box-shadow: var(--sombra-suave);
+}
+
+/* Tablero por columnas */
+.orden-tablero { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem; align-items: start; }
+.orden-columna {
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, .6);
+    border: 1.5px solid #fff;
+    border-radius: var(--radio-xl);
+}
+.orden-columna__titulo {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0 0 .1rem;
+    font-family: var(--font-elegante);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+.orden-columna__titulo i { color: #c97a1e; font-size: 1rem; }
+.orden-columna__titulo .badge { margin-left: auto; }
+.orden-columna__vacia { padding: 1rem; text-align: center; color: var(--lila-texto); font-size: .9rem; }
+
+.orden-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.1rem; }
+
+/* Tarjeta de orden */
+.orden-card {
+    --orden-acento: #c97a1e;
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    padding: 1.1rem 1.2rem;
+    background: #fff;
+    border: 1.5px solid #fff;
+    border-left: 6px solid var(--orden-acento);
+    border-radius: var(--radio-lg);
+    box-shadow: var(--sombra-suave);
+}
+.orden-card--pendiente { --orden-acento: #d99a1b; }
+.orden-card--en_produccion { --orden-acento: #4a63d6; }
+.orden-card--lista { --orden-acento: #a94bc1; }
+.orden-card--entregada { --orden-acento: #1f9d63; }
+.orden-card--cancelada { --orden-acento: #d6335f; opacity: .85; }
+
+.orden-card__cabeza { display: flex; align-items: flex-start; justify-content: space-between; gap: .6rem; }
+.orden-card__numero { font-size: 1.15rem; font-weight: 800; letter-spacing: .02em; }
+.orden-card__lugar { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.orden-card__cliente { font-size: .88rem; color: var(--lila-texto); }
+
+.orden-card__programada {
+    padding: .35rem .7rem;
+    font-size: .84rem;
+    font-weight: 600;
+    color: var(--tono-info-fg);
+    background: var(--tono-info-bg);
+    border-radius: var(--radio-sm);
+}
+.orden-card__programada.is-atrasada { color: var(--tono-danger-fg); background: var(--tono-danger-bg); }
+
+.orden-card__items { margin: 0; padding: .6rem .8rem; list-style: none; background: var(--lila-tenue); border-radius: var(--radio-md); }
+.orden-card__items li { padding: .12rem 0; }
+.orden-item__cant { display: inline-block; min-width: 2rem; font-weight: 800; color: var(--lila-hover); }
+.orden-card__notas { font-size: .86rem; color: var(--lila-texto); }
+.orden-card .pasos { font-size: .72rem; }
+.orden-card .pasos__paso { padding: .15rem .5rem; font-size: .7rem; }
+.orden-card__accion { margin-top: .1rem; }
+.orden-card__accion .btn { padding: .6rem 1rem; }
+
+@media (max-width: 991.98px) {
+    .orden-tablero { grid-template-columns: 1fr; }
+}

@@ -1,9 +1,10 @@
 /* ==========================================
    DULCE SABOR SYS - RESERVAS
-   Requiere theme.css + global.css.
+   Requiere theme.css + global.css + componentes.css.
    ========================================== */
 #modulo-reservas,
-#modal-reservas {
+#modal-reservas,
+#modal-reservas-detalle {
     --mod-fg: #1f9d63;
     --mod-bg: #d9f5e7;
     --mod-hero: linear-gradient(120deg, #f4fcf8 0%, #dff7eb 55%, #c9f0dd 100%);
@@ -13,3 +14,37 @@
     --mod-glyph: "\f274";
 }
 #modulo-reservas > .d-flex:first-child { background: var(--mod-hero); }
+
+#tabla-reservas > tbody > tr > td:first-child { font-weight: 600; }
+
+/* Selector de mesas */
+.reserva-mesas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: .6rem;
+    padding: .8rem;
+    min-height: 64px;
+    background: #f7fcf9;
+    border: 1.5px dashed #b6ebd1;
+    border-radius: var(--radio-md);
+}
+.reserva-mesas__aviso {
+    grid-column: 1 / -1;
+    align-self: center;
+    text-align: center;
+    color: var(--lila-texto);
+    font-size: .92rem;
+}
+.reserva-mesa label { padding: .6rem .8rem; }
+.reserva-mesa label i { color: #1f9d63; }
+.reserva-mesa input:checked + label {
+    background: #d9f5e7;
+    border-color: #1f9d63;
+    box-shadow: 0 0 0 .2rem rgba(31, 157, 99, .18);
+}
+.reserva-mesa__datos { display: flex; flex-direction: column; line-height: 1.2; }
+.reserva-mesa__datos small { font-weight: 500; color: var(--lila-texto); }
+
+@media (max-width: 767.98px) {
+    #tabla-reservas > tbody > tr > td { white-space: nowrap; }
+}
