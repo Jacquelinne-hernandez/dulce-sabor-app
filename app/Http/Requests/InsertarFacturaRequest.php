@@ -24,10 +24,9 @@ class InsertarFacturaRequest extends FormRequest
             'id_pedido.integer' => 'El identificador del pedido no es válido.',
             'id_pedido.exists' => 'El pedido seleccionado no existe.',
 
-            'efectivo_recibido.required' => 'Debe indicar el efectivo recibido.',
-            'efectivo_recibido.numeric' => 'El efectivo recibido debe ser un valor numérico.',
-            'efectivo_recibido.gt' => 'El efectivo recibido debe ser mayor que cero.',
-            'efectivo_recibido.max' => 'El efectivo recibido supera el límite permitido.',
+            'puntos_canjeados.integer' => 'Los puntos a canjear deben ser un número entero.',
+            'puntos_canjeados.min' => 'Los puntos a canjear no pueden ser negativos.',
+            'puntos_canjeados.max' => 'La cantidad de puntos a canjear supera el límite permitido.',
         ];
     }
 }

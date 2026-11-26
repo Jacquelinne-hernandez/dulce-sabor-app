@@ -14,6 +14,7 @@ class DetallePedido extends Model
         'id_producto',
         'cantidad',
         'precio_unitario',
+        'costo_unitario',
         'subtotal',
     ];
 
@@ -22,7 +23,14 @@ class DetallePedido extends Model
         'id_producto' => 'integer',
         'cantidad' => 'integer',
         'precio_unitario' => 'decimal:2',
+        'costo_unitario' => 'decimal:2',
         'subtotal' => 'decimal:2',
+    ];
+
+    // El costo es información del administrador: no viaja en el JSON
+    // que ve el operador. Las utilidades salen de las vistas SQL.
+    protected $hidden = [
+        'costo_unitario',
     ];
 
     public function pedido(): BelongsTo
@@ -35,4 +43,3 @@ class DetallePedido extends Model
         return $this->belongsTo(Producto::class, 'id_producto');
     }
 }
-

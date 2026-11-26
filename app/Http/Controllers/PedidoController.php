@@ -2,39 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\InsertarPedidoRequest;
 use App\Http\Requests\ActualizarEstadoPedidoRequest;
-use App\Models\Pedido;
-use App\Models\Cliente;
-use App\Models\Mesa;
-use App\Models\Producto;
+use App\Http\Requests\InsertarPedidoRequest;
 use App\Models\Bitacora;
+use App\Models\Mesa;
+use App\Models\Pedido;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PedidoController extends Controller
 {
+    // El cliente se busca por código o nombre (ClienteController) y las
+    // reservas del día se piden con reservasPorAtender, así que la vista
+    // solo recibe las mesas y los productos que se pueden vender.
     public function index()
     {
-        $clientes = Cliente::where('id_estado', '!=', 3)
-            ->orderBy('nombre')
-            ->get();
-
         $mesas = Mesa::where('estado', '!=', 'mantenimiento')
             ->orderBy('numero')
             ->get();
 
-        $productos = Producto::where('estado', 'disponible')
-            ->where('stock', '>', 0)
-            ->orderBy('nombre')
-            ->get();
+        $productos = Producto::mostrarCatalogo()
+            ->filter(fn ($p) => $p->estado === 'disponible' && $p->stock > 0)
+            ->values();
 
-        return view('pedido.pedidos', compact(
-            'clientes',
-            'mesas',
-            'productos'
-        ));
+        return view('pedido.pedidos', compact('mesas', 'productos'));
     }
 
     public function mostrarTodos()
@@ -47,17 +39,7 @@ class PedidoController extends Controller
 
     public function buscarPedido($id)
     {
-        $datos = validator([
-            'id' => $id,
-        ], [
-            'id' => [
-                'required',
-                'integer',
-                'exists:pedidos,id',
-            ],
-        ])->validate();
-
-        $pedido = Pedido::buscarPedidoXId($datos['id']);
+        $pedido = Pedido::buscarPedidoXId($id);
 
         if (!$pedido) {
             return response()->json([
@@ -90,7 +72,7 @@ class PedidoController extends Controller
     public function mostrarPorEstado(Request $request)
     {
         $datos = $request->validate([
-            'estado' => Pedido::reglasEstado()['estado'],
+            'estado' => ['required', 'string', 'in:abierto,completado,cancelado'],
         ], [
             'estado.required' => 'Debe seleccionar un estado.',
             'estado.in' => 'El estado seleccionado no es válido.',
@@ -102,20 +84,34 @@ class PedidoController extends Controller
         ]);
     }
 
+    // Reservas confirmadas para hoy que aún no tienen pedido.
+    public function reservasPorAtender()
+    {
+        return response()->json([
+            'success' => true,
+            'reservas' => Pedido::reservasPorAtender(),
+        ]);
+    }
+
     public function insertarPedido(InsertarPedidoRequest $request)
     {
-        $datos = $request->validated();
-
         $pedido = Pedido::insertar(
-            $datos,
+            $request->validated(),
             Auth::id()
         );
+
+        $cliente = $pedido->cliente
+            ? $pedido->cliente->codigo . ' (' . $pedido->cliente->nombre_completo . ')'
+            : 'consumidor final';
 
         Bitacora::registrar(
             Bitacora::CREADO,
             'PEDIDOS',
             $pedido->id,
-            'Se registró el pedido #' . $pedido->id,
+            'Se registró el pedido #' . $pedido->id . ' (' . $pedido->tipo . ')'
+            . ' de ' . $cliente
+            . ', orden ' . $pedido->orden->numero_orden
+            . ', total $' . $pedido->total,
             Auth::user()?->nombre
         );
 
@@ -126,15 +122,15 @@ class PedidoController extends Controller
         ], 201);
     }
 
-    public function actualizarEstado(
-        ActualizarEstadoPedidoRequest $request,
-                                      $id
-    ) {
+    // Cancelación del pedido (único cambio de estado manual).
+    public function actualizarEstado(ActualizarEstadoPedidoRequest $request, $id)
+    {
         $datos = $request->validated();
 
-        $pedido = Pedido::cambiarEstado(
+        $pedido = Pedido::cancelar(
             $id,
-            $datos['estado']
+            Auth::id(),
+            $datos['motivo'] ?? null
         );
 
         if (!$pedido) {
@@ -148,16 +144,14 @@ class PedidoController extends Controller
             Bitacora::ACTUALIZADO,
             'PEDIDOS',
             $pedido->id,
-            'Se actualizó el estado del pedido #' . $pedido->id .
-            ' a ' . $pedido->estado,
+            'Se canceló el pedido #' . $pedido->id
+            . (!empty($datos['motivo']) ? ': ' . $datos['motivo'] : ''),
             Auth::user()?->nombre
         );
 
         return response()->json([
             'success' => true,
-            'mensaje' => $pedido->estado === 'cancelado'
-                ? 'El pedido fue cancelado y las existencias fueron restituidas correctamente.'
-                : 'El estado del pedido se actualizó correctamente.',
+            'mensaje' => 'El pedido fue cancelado y las existencias fueron restituidas correctamente.',
             'pedido' => $pedido,
         ]);
     }
