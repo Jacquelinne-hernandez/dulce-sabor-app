@@ -4,12 +4,16 @@ use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CompraController;
+use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\FacturaController;
+use App\Http\Controllers\GastoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MesaController;
+use App\Http\Controllers\OrdenController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
@@ -37,12 +41,14 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'rol'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    // Cada rol ve su propio dashboard (el administrador admite ?desde=&hasta=).
     Route::get('home/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Módulos operativos: Administrador y Operador
+| Operación: Administrador y Operador
 |--------------------------------------------------------------------------
 */
 
@@ -51,10 +57,16 @@ Route::middleware(['auth', 'rol:Administrador,Operador'])->group(function () {
     // Clientes
     Route::get('clientes', [ClienteController::class, 'index'])->name('clientes');
     Route::get('clientes/todos', [ClienteController::class, 'mostrarTodos'])->name('clientes.todos');
+    Route::get('clientes/codigo/{codigo}', [ClienteController::class, 'buscarPorCodigo'])->name('clientes.codigo');
+    Route::get('clientes/filtrar', [ClienteController::class, 'buscarPorTermino'])->name('clientes.filtrar');
     Route::post('clientes/insertar', [ClienteController::class, 'insertarCliente'])->name('clientes.insertar');
     Route::get('clientes/buscar/{id}', [ClienteController::class, 'buscarCliente'])->name('clientes.buscar');
     Route::put('clientes/actualizar/{id}', [ClienteController::class, 'actualizarCliente'])->name('clientes.actualizar');
     Route::delete('clientes/eliminar/{id}', [ClienteController::class, 'eliminarCliente'])->name('clientes.eliminar');
+
+    // Catálogo de productos (solo lectura: existencias y precio, sin costo)
+    Route::get('productos/catalogo', [ProductoController::class, 'catalogo'])->name('productos.catalogo');
+    Route::get('productos/catalogo/todos', [ProductoController::class, 'catalogoTodos'])->name('productos.catalogo.todos');
 
     // Mesas (consulta y cambio de estado)
     Route::get('mesas', [MesaController::class, 'index'])->name('mesas');
@@ -69,6 +81,8 @@ Route::middleware(['auth', 'rol:Administrador,Operador'])->group(function () {
     Route::get('reservas/buscar/{id}', [ReservaController::class, 'buscarReserva'])->name('reservas.buscar');
     Route::get('reservas/fecha', [ReservaController::class, 'mostrarPorFecha'])->name('reservas.fecha');
     Route::get('reservas/estado', [ReservaController::class, 'mostrarPorEstado'])->name('reservas.estado');
+    Route::get('reservas/mesas-disponibles', [ReservaController::class, 'mesasDisponibles'])->name('reservas.mesasDisponibles');
+    Route::get('reservas/cotizar', [ReservaController::class, 'cotizar'])->name('reservas.cotizar');
     Route::post('reservas/insertar', [ReservaController::class, 'insertarReserva'])->name('reservas.insertar');
     Route::patch('reservas/actualizar-estado/{id}', [ReservaController::class, 'actualizarEstado'])->name('reservas.actualizarEstado');
 
@@ -78,19 +92,50 @@ Route::middleware(['auth', 'rol:Administrador,Operador'])->group(function () {
     Route::get('pedidos/buscar/{id}', [PedidoController::class, 'buscarPedido'])->name('pedidos.buscar');
     Route::get('pedidos/fecha', [PedidoController::class, 'mostrarPorFecha'])->name('pedidos.fecha');
     Route::get('pedidos/estado', [PedidoController::class, 'mostrarPorEstado'])->name('pedidos.estado');
+    Route::get('pedidos/reservas-por-atender', [PedidoController::class, 'reservasPorAtender'])->name('pedidos.reservasPorAtender');
     Route::post('pedidos/insertar', [PedidoController::class, 'insertarPedido'])->name('pedidos.insertar');
-    Route::patch('pedidos/{id}/estado', [PedidoController::class, 'actualizarEstado'])->name('pedidos.actualizarEstado');
+    // Un pedido solo se cancela (estado = cancelado); se completa al pagarse.
+    Route::patch('pedidos/{id}/estado', [PedidoController::class, 'actualizarEstado'])
+        ->whereNumber('id')
+        ->name('pedidos.actualizarEstado');
 
-    // Facturas (emisión y consulta)
+    // Órdenes de trabajo
+    Route::get('ordenes', [OrdenController::class, 'index'])->name('ordenes');
+    Route::get('ordenes/todos', [OrdenController::class, 'mostrarTodos'])->name('ordenes.todos');
+    Route::get('ordenes/activas', [OrdenController::class, 'mostrarActivas'])->name('ordenes.activas');
+    Route::get('ordenes/estado', [OrdenController::class, 'mostrarPorEstado'])->name('ordenes.estado');
+    Route::get('ordenes/buscar/{id}', [OrdenController::class, 'buscarOrden'])->name('ordenes.buscar');
+    Route::patch('ordenes/{id}/estado', [OrdenController::class, 'actualizarEstado'])
+        ->whereNumber('id')
+        ->name('ordenes.actualizarEstado');
+
+    // Facturas (emisión, consulta e impresión)
     Route::get('facturas', [FacturaController::class, 'index'])->name('facturas');
     Route::get('facturas/todos', [FacturaController::class, 'mostrarTodos'])->name('facturas.todos');
+    Route::get('facturas/estado', [FacturaController::class, 'mostrarPorEstado'])->name('facturas.estado');
+    Route::get('facturas/por-facturar', [FacturaController::class, 'pedidosPorFacturar'])->name('facturas.porFacturar');
+    Route::get('facturas/cotizar', [FacturaController::class, 'cotizar'])->name('facturas.cotizar');
     Route::get('facturas/buscar/{id}', [FacturaController::class, 'buscarFactura'])->name('facturas.buscar');
     Route::post('facturas/insertar', [FacturaController::class, 'insertarFactura'])->name('facturas.insertar');
+
+    // Documentos imprimibles (PDF): factura completa y ticket
+    Route::get('facturas/{id}/pdf', [DocumentoController::class, 'factura'])
+        ->whereNumber('id')
+        ->name('facturas.pdf');
+    Route::get('facturas/{id}/ticket', [DocumentoController::class, 'ticket'])
+        ->whereNumber('id')
+        ->name('facturas.ticket');
+
+    // Pagos (efectivo y tarjeta simulada)
+    Route::get('facturas/{id}/pagos', [PagoController::class, 'mostrarPorFactura'])
+        ->whereNumber('id')
+        ->name('facturas.pagos');
+    Route::post('pagos/insertar', [PagoController::class, 'registrarPago'])->name('pagos.insertar');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Módulos administrativos: solo Administrador
+| Administración: solo Administrador
 |--------------------------------------------------------------------------
 */
 
@@ -139,7 +184,7 @@ Route::middleware(['auth', 'rol:Administrador'])->group(function () {
     Route::put('proveedores/actualizar/{id}', [ProveedorController::class, 'actualizarProveedor'])->name('proveedores.actualizar');
     Route::delete('proveedores/eliminar/{id}', [ProveedorController::class, 'eliminarProveedor'])->name('proveedores.eliminar');
 
-    // Productos
+    // Productos (gestión completa, con costo)
     Route::get('productos', [ProductoController::class, 'index'])->name('productos');
     Route::get('productos/todos', [ProductoController::class, 'mostrarTodos'])->name('productos.todos');
     Route::post('productos/insertar', [ProductoController::class, 'insertarProducto'])->name('productos.insertar');
@@ -148,11 +193,24 @@ Route::middleware(['auth', 'rol:Administrador'])->group(function () {
     Route::delete('productos/eliminar/{id}', [ProductoController::class, 'eliminarProducto'])->name('productos.eliminar');
     Route::patch('productos/reactivar/{id}', [ProductoController::class, 'reactivarProducto'])->name('productos.reactivar');
 
-    // Compras
+    // Compras, deudas con proveedores y abonos
     Route::get('compras', [CompraController::class, 'index'])->name('compras');
     Route::get('compras/todos', [CompraController::class, 'mostrarTodos'])->name('compras.todos');
+    Route::get('compras/deudas', [CompraController::class, 'mostrarDeudas'])->name('compras.deudas');
     Route::get('compras/buscar/{id}', [CompraController::class, 'buscarCompra'])->name('compras.buscar');
     Route::post('compras/insertar', [CompraController::class, 'insertarCompra'])->name('compras.insertar');
+    Route::post('compras/{id}/abonos', [CompraController::class, 'registrarAbono'])
+        ->whereNumber('id')
+        ->name('compras.abonos');
+
+    // Gastos adicionales (arrendamiento, luz, agua, internet...)
+    Route::get('gastos', [GastoController::class, 'index'])->name('gastos');
+    Route::get('gastos/todos', [GastoController::class, 'mostrarTodos'])->name('gastos.todos');
+    Route::get('gastos/resumen', [GastoController::class, 'resumen'])->name('gastos.resumen');
+    Route::get('gastos/buscar/{id}', [GastoController::class, 'buscarGasto'])->name('gastos.buscar');
+    Route::post('gastos/insertar', [GastoController::class, 'insertarGasto'])->name('gastos.insertar');
+    Route::put('gastos/actualizar/{id}', [GastoController::class, 'actualizarGasto'])->name('gastos.actualizar');
+    Route::patch('gastos/anular/{id}', [GastoController::class, 'anularGasto'])->name('gastos.anular');
 
     // Horarios
     Route::get('horarios', [HorarioController::class, 'index'])->name('horarios');
@@ -161,10 +219,13 @@ Route::middleware(['auth', 'rol:Administrador'])->group(function () {
     Route::get('horarios/dia/{dia}', [HorarioController::class, 'buscarHorarioXDia'])->name('horarios.dia');
     Route::put('horarios/actualizar/{id}', [HorarioController::class, 'actualizarHorario'])->name('horarios.actualizar');
 
-    // Mesas (alta y edición)
+    // Mesas (alta, edición y tarifa por hora)
     Route::post('mesas/insertar', [MesaController::class, 'insertarMesa'])->name('mesas.insertar');
     Route::put('mesas/actualizar/{id}', [MesaController::class, 'actualizarMesa'])->name('mesas.actualizar');
 
-    // Facturas (anulación)
+    // Facturas (anulación de la venta: exige motivo)
     Route::patch('facturas/anular/{id}', [FacturaController::class, 'anularFactura'])->name('facturas.anular');
+
+    // Resumen financiero en PDF (?desde=&hasta=)
+    Route::get('reportes/financiero', [DocumentoController::class, 'reporteFinanciero'])->name('reportes.financiero');
 });

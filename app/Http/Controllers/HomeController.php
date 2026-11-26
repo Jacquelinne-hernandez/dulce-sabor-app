@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
-use App\Models\Estado;
-use App\Models\Factura;
-use App\Models\Mesa;
-use App\Models\Pedido;
-use App\Models\Producto;
-use App\Models\Reserva;
-use App\Models\Usuario;
+use App\Support\Dashboard;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -18,46 +13,36 @@ class HomeController extends Controller
         return view('home.index');
     }
 
-    public function dashboard()
+    // Cada rol ve su dashboard. El del administrador admite ?desde=&hasta=
+    // (por defecto, el mes en curso).
+    public function dashboard(Request $request)
     {
-        $hoy = now()->toDateString();
+        $esAdmin = auth()->user()->rol?->nombre === 'Administrador';
 
-        // Indicadores generales del día.
-        $resumen = [
-            'pedidos_hoy' => Pedido::whereDate('fecha', $hoy)->count(),
+        try {
+            if ($esAdmin) {
+                $datos = Dashboard::admin(
+                    $request->query('desde'),
+                    $request->query('hasta')
+                );
 
-            'pedidos_en_curso' => Pedido::whereIn(
-                'estado',
-                ['pendiente', 'en_preparacion', 'listo']
-            )->count(),
+                return view('home.dashboard_admin', compact('datos'));
+            }
 
-            'ventas_hoy' => Factura::where('estado', 'emitida')
-                ->whereDate('fecha_emision', $hoy)
-                ->sum('total'),
+            $datos = Dashboard::operador();
 
-            'reservas_hoy' => Reserva::whereDate('fecha', $hoy)
-                ->whereIn('estado', ['pendiente', 'confirmada'])
-                ->count(),
+            return view('home.dashboard_operador', compact('datos'));
+        } catch (QueryException $e) {
+            // 42S02: tabla o vista inexistente.
+            if ($e->getCode() === '42S02') {
+                abort(
+                    503,
+                    'Faltan las vistas SQL del dashboard. Ejecute el archivo '
+                    . 'database/vistas/dashboard_views.sql en la base de datos.'
+                );
+            }
 
-            'mesas_disponibles' => Mesa::where('estado', 'disponible')->count(),
-
-            'clientes_activos' => Cliente::where('id_estado', Estado::ACTIVO)->count(),
-        ];
-
-        $productosStockBajo = Producto::stockBajo();
-
-        $ultimosPedidos = Pedido::with(['cliente', 'mesa'])
-            ->orderByDesc('fecha')
-            ->limit(5)
-            ->get();
-
-        $usuariosPorEstado = Usuario::estadosDeUsuario();
-
-        return view('home.dashboard', compact(
-            'resumen',
-            'productosStockBajo',
-            'ultimosPedidos',
-            'usuariosPorEstado'
-        ));
+            throw $e;
+        }
     }
 }
