@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
     /**
      * Poblar la base de datos.
      *
-     * El orden importa: los usuarios dependen de roles y estados.
+     * El orden importa: los usuarios dependen de roles y estados,
+     * los productos de las categorías y los clientes de los correlativos.
      */
     public function run(): void
     {
@@ -24,6 +25,8 @@ class DatabaseSeeder extends Seeder
             CategoriaSeeder::class,
             CorrelativoSeeder::class,
             ProveedorSeeder::class,
+            ProductoSeeder::class,
+            ClienteSeeder::class,
         ]);
     }
 }

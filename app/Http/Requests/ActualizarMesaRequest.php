@@ -29,7 +29,12 @@ class ActualizarMesaRequest extends FormRequest
 
             'capacidad.required' => 'La capacidad de la mesa es obligatoria.',
             'capacidad.integer' => 'La capacidad debe ser un número entero.',
-            'capacidad.min' => 'La capacidad debe ser como mínimo de una persona.'
+            'capacidad.min' => 'La capacidad debe ser como mínimo de una persona.',
+
+            'tarifa_hora.required' => 'La tarifa por hora es obligatoria.',
+            'tarifa_hora.numeric' => 'La tarifa por hora debe ser un valor numérico.',
+            'tarifa_hora.min' => 'La tarifa por hora no puede ser negativa.',
+            'tarifa_hora.max' => 'La tarifa por hora supera el límite permitido.'
         ];
     }
 }

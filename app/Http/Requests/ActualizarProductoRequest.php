@@ -34,6 +34,11 @@ class ActualizarProductoRequest extends FormRequest
             'precio.gt' => 'El precio debe ser mayor que cero.',
             'precio.max' => 'El precio supera el límite permitido.',
 
+            'costo.required' => 'El costo del producto es obligatorio.',
+            'costo.numeric' => 'El costo debe ser un valor numérico.',
+            'costo.min' => 'El costo no puede ser negativo.',
+            'costo.max' => 'El costo supera el límite permitido.',
+
             'stock.required' => 'El stock es obligatorio.',
             'stock.integer' => 'El stock debe ser un número entero.',
             'stock.min' => 'El stock no puede ser negativo.',

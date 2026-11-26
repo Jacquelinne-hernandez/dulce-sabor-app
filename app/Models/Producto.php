@@ -16,6 +16,7 @@ class Producto extends Model
         'id_categoria',
         'nombre',
         'precio',
+        'costo',
         'stock',
         'stock_minimo',
         'descripcion',
@@ -27,11 +28,20 @@ class Producto extends Model
         'id_categoria' => 'integer',
         'nombre' => 'string',
         'precio' => 'decimal:2',
+        'costo' => 'decimal:2',
         'stock' => 'integer',
         'stock_minimo' => 'integer',
         'descripcion' => 'string',
         'imagen' => 'string',
         'estado' => 'string',
+    ];
+
+    // El costo es información del administrador: no se incluye en las
+    // respuestas JSON (ni siquiera cuando el producto viaja dentro de un
+    // pedido o una factura). Los endpoints del administrador lo muestran
+    // con makeVisible('costo').
+    protected $hidden = [
+        'costo',
     ];
 
     // Relaciones
@@ -79,6 +89,12 @@ class Producto extends Model
                 'gt:0',
                 'max:99999999.99',
             ],
+            'costo' => [
+                'required',
+                'numeric',
+                'min:0',
+                'max:99999999.99',
+            ],
             'stock' => [
                 'required',
                 'integer',
@@ -122,6 +138,27 @@ class Producto extends Model
     {
         return self::with('categoria')
             ->where('estado', 'disponible')
+            ->orderBy('nombre')
+            ->get();
+    }
+
+    // Catálogo de solo lectura para el operador: existencias y precio,
+    // sin costo, y sin productos inactivos.
+    public static function mostrarCatalogo()
+    {
+        return self::select([
+            'id',
+            'id_categoria',
+            'nombre',
+            'precio',
+            'stock',
+            'stock_minimo',
+            'descripcion',
+            'imagen',
+            'estado',
+        ])
+            ->with('categoria')
+            ->where('estado', '!=', 'inactivo')
             ->orderBy('nombre')
             ->get();
     }

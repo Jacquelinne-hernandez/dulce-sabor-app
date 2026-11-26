@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -17,12 +18,14 @@ class Mesa extends Model
     protected $fillable = [
         'numero',
         'capacidad',
+        'tarifa_hora',
         'estado'
     ];
 
     protected $casts = [
         'numero' => 'integer',
         'capacidad' => 'integer',
+        'tarifa_hora' => 'decimal:2',
         'estado' => 'string'
     ];
 
@@ -32,9 +35,18 @@ class Mesa extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function reservas(): HasMany
+    // Una mesa puede estar en varias reservas (y una reserva en varias
+    // mesas): la relación pasa por la tabla detalle_reservas.
+    public function reservas(): BelongsToMany
     {
-        return $this->hasMany(Reserva::class, 'id_mesa');
+        return $this->belongsToMany(
+            Reserva::class,
+            'detalle_reservas',
+            'id_mesa',
+            'id_reserva'
+        )
+            ->withPivot(['tarifa_hora', 'horas', 'subtotal'])
+            ->withTimestamps();
     }
 
     public function pedidos(): HasMany
@@ -63,6 +75,14 @@ class Mesa extends Model
                 'required',
                 'integer',
                 'min:1'
+            ],
+
+            // Tarifa que se cobra por hora cuando la mesa se reserva.
+            'tarifa_hora' => [
+                'required',
+                'numeric',
+                'min:0',
+                'max:9999.99'
             ]
         ];
     }

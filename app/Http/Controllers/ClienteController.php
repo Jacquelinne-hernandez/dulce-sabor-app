@@ -7,6 +7,7 @@ use App\Http\Requests\InsertarClienteRequest;
 use App\Models\Bitacora;
 use App\Models\Cliente;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -53,13 +54,13 @@ class ClienteController extends Controller
             Bitacora::CREADO,
             'CLIENTES',
             $cliente->id,
-            'Se registró el cliente: ' . $cliente->nombre,
+            'Se registró el cliente ' . $cliente->codigo . ': ' . $cliente->nombre_completo,
             Auth::user()?->nombre
         );
 
         return response()->json([
             'success' => true,
-            'mensaje' => 'Cliente registrado correctamente.',
+            'mensaje' => 'Cliente registrado correctamente. Código asignado: ' . $cliente->codigo . '.',
             'cliente' => $cliente
         ], 201);
     }
@@ -89,6 +90,52 @@ class ClienteController extends Controller
 
     /*
     |--------------------------------------------------------------------------
+    | Buscar cliente por código (tarjeta del cliente)
+    |--------------------------------------------------------------------------
+    */
+
+    public function buscarPorCodigo($codigo): JsonResponse
+    {
+        $cliente = Cliente::buscarClienteXCodigo($codigo);
+
+        if (!$cliente) {
+            return response()->json([
+                'success' => false,
+                'mensaje' => 'No existe un cliente activo con ese código.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'cliente' => $cliente
+        ], 200);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Buscar clientes por código o nombre (para asociarlos a una venta)
+    |--------------------------------------------------------------------------
+    */
+
+    public function buscarPorTermino(Request $request): JsonResponse
+    {
+        $datos = $request->validate([
+            'q' => ['required', 'string', 'min:2', 'max:60'],
+        ], [
+            'q.required' => 'Escriba el código o el nombre del cliente.',
+            'q.string' => 'El criterio de búsqueda no es válido.',
+            'q.min' => 'Escriba al menos 2 caracteres para buscar.',
+            'q.max' => 'El criterio de búsqueda es demasiado largo.',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'clientes' => Cliente::buscarActivos($datos['q'])
+        ], 200);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Actualizar cliente
     |--------------------------------------------------------------------------
     */
@@ -110,7 +157,7 @@ class ClienteController extends Controller
             Bitacora::ACTUALIZADO,
             'CLIENTES',
             $cliente->id,
-            'Se actualizaron los datos del cliente: ' . $cliente->nombre,
+            'Se actualizaron los datos del cliente ' . $cliente->codigo . ': ' . $cliente->nombre_completo,
             Auth::user()?->nombre
         );
 
@@ -144,7 +191,7 @@ class ClienteController extends Controller
             Bitacora::ELIMINADO,
             'CLIENTES',
             $cliente->id,
-            'Se cambió el estado del cliente a eliminado: ' . $cliente->nombre,
+            'Se cambió el estado del cliente a eliminado: ' . $cliente->codigo . ' ' . $cliente->nombre_completo,
             Auth::user()?->nombre
         );
 

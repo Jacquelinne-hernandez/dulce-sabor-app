@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductoController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Gestión de productos (administrador)
+    |
+    | Solo aquí se envía el costo: el modelo lo oculta por defecto.
+    |--------------------------------------------------------------------------
+    */
+
     public function index()
     {
         $categorias = Categoria::orderBy('nombre')->get();
@@ -23,7 +31,7 @@ class ProductoController extends Controller
     {
         return response()->json([
             'success' => true,
-            'productos' => Producto::mostrarTodos(),
+            'productos' => Producto::mostrarTodos()->makeVisible('costo'),
         ]);
     }
 
@@ -42,7 +50,7 @@ class ProductoController extends Controller
         return response()->json([
             'success' => true,
             'mensaje' => 'Producto registrado correctamente.',
-            'producto' => $producto->load('categoria'),
+            'producto' => $producto->load('categoria')->makeVisible('costo'),
         ], 201);
     }
 
@@ -59,7 +67,7 @@ class ProductoController extends Controller
 
         return response()->json([
             'success' => true,
-            'producto' => $producto,
+            'producto' => $producto->makeVisible('costo'),
         ]);
     }
 
@@ -85,7 +93,7 @@ class ProductoController extends Controller
         return response()->json([
             'success' => true,
             'mensaje' => 'Producto actualizado correctamente.',
-            'producto' => $producto,
+            'producto' => $producto->makeVisible('costo'),
         ]);
     }
 
@@ -138,7 +146,28 @@ class ProductoController extends Controller
         return response()->json([
             'success' => true,
             'mensaje' => 'Producto reactivado correctamente.',
-            'producto' => $producto,
+            'producto' => $producto->makeVisible('costo'),
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Catálogo de solo lectura (administrador y operador)
+    |
+    | Muestra precio y existencias, sin costo y sin opciones de edición.
+    |--------------------------------------------------------------------------
+    */
+
+    public function catalogo()
+    {
+        return view('producto.catalogo');
+    }
+
+    public function catalogoTodos()
+    {
+        return response()->json([
+            'success' => true,
+            'productos' => Producto::mostrarCatalogo(),
         ]);
     }
 }
