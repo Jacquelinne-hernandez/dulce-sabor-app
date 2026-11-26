@@ -1,0 +1,919 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+/* ==========================================
+   DULCE SABOR SYS - LOGIN
+   Diseño visual definitivo
+   ========================================== */
+
+:root {
+    --lila-fondo: #f5e8fa;
+    --lila-claro: #fffaff;
+    --lila-medio: #d7a5eb;
+    --lila-boton: #a94bc1;
+    --lila-hover: #8434a1;
+    --lila-oscuro: #50216e;
+    --lila-texto: #77518c;
+    --lila-borde: #dcb5ec;
+    --blanco: #ffffff;
+
+    --font-principal: 'DM Sans', sans-serif;
+    --font-elegante: 'Playfair Display', serif;
+    --font-decorativa: 'Great Vibes', cursive;
+}
+
+/* ==========================================
+   RESET GENERAL
+   ========================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #f4dafa;
+    overflow-x: hidden;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    font-family: var(--font-principal);
+    color: var(--lila-oscuro);
+
+    background:
+        linear-gradient(
+            115deg,
+            #fff8ff 0%,
+            #f9e9fc 35%,
+            #f2d8f7 70%,
+            #e9c1f0 100%
+        );
+
+    background-attachment: fixed;
+    overflow-x: hidden;
+}
+
+/* ==========================================
+   CONTENEDORES PRINCIPALES
+   CENTRADO DE TODA LA PANTALLA
+   ========================================== */
+
+.auth-main {
+    position: relative;
+
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+}
+
+/* Se ancla a la ventana completa, sin depender del layout */
+.dulce-login {
+    position: fixed;
+    inset: 0;
+    isolation: isolate;
+
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+
+    margin: 0;
+    padding: 24px;
+
+    display: flex;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    background-color: #f7e6fa;
+
+    background-image:
+        url("../images/login-ornamentos.svg"),
+        radial-gradient(
+            circle at 15% 20%,
+            #fffaff 0%,
+            transparent 42%
+        ),
+        linear-gradient(
+            135deg,
+            #fffaff 0%,
+            #f5ddfa 50%,
+            #e9c5f1 100%
+        );
+
+    background-position: center, center, center;
+    background-repeat: no-repeat;
+    background-size: cover, cover, cover;
+}
+
+/* Decoraciones sueltas: ya están dibujadas en el SVG de fondo.
+   Se ocultan porque, al estar dentro del flex, desplazaban la tarjeta. */
+.dulce-login > .dulce-login__corazon,
+.dulce-login > .dulce-login__pastel-decorativo {
+    display: none;
+}
+
+/* ==========================================
+   TARJETA PRINCIPAL
+   ========================================== */
+
+.dulce-login__contenedor {
+    position: relative;
+    z-index: 1;
+
+    width: min(100%, 1240px);
+    max-width: 1240px;
+
+    min-height: min(82vh, 845px);
+
+    /* margin auto centra la tarjeta sin cortarla si la pantalla es baja */
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    overflow: hidden;
+
+    background: #fffdfd;
+
+    border: 1px solid rgba(255, 255, 255, .95);
+    border-radius: 28px;
+
+    box-shadow:
+        0 20px 55px rgba(143, 73, 168, .19),
+        0 5px 15px rgba(143, 73, 168, .08);
+}
+
+.dulce-login__portada,
+.dulce-login__panel {
+    min-width: 0;
+}
+
+/* ==========================================
+   PANEL IZQUIERDO
+   ========================================== */
+
+.dulce-login__portada {
+    position: relative;
+
+    min-height: 760px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 35px 25px 25px;
+
+    background-color: #c98cdd;
+
+    background-image:
+        linear-gradient(
+            180deg,
+            rgba(100, 35, 125, .12),
+            rgba(100, 35, 125, .16)
+        ),
+        url("../images/pastel-lila.jpg");
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Identidad de la pastelería */
+
+.dulce-login__marca {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    max-width: 480px;
+
+    margin: 0 auto;
+    padding: 10px 15px 20px;
+
+    text-align: center;
+
+    transform: translateY(-22px);
+}
+
+/* Icono cupcake */
+
+.dulce-login__icono {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 10px;
+
+    color: #582174;
+}
+
+.dulce-login__icono svg {
+    width: 100px;
+    height: 105px;
+
+    filter: drop-shadow(
+        0 3px 5px rgba(65, 20, 90, .20)
+    );
+}
+
+/* Nombre */
+
+.dulce-login__nombre {
+    margin: 0;
+
+    color: #50216e;
+
+    font-family: var(--font-decorativa);
+    font-size: clamp(42px, 4.2vw, 62px);
+    font-weight: 400;
+    line-height: 1.12;
+
+    text-shadow:
+        0 2px 5px rgba(255, 255, 255, .85),
+        0 0 16px rgba(255, 255, 255, .55);
+}
+
+/* Separador */
+
+.dulce-login__decoracion {
+    margin: 10px auto;
+
+    color: #652783;
+
+    font-size: 22px;
+    font-weight: 600;
+
+    text-shadow: 0 1px 5px white;
+}
+
+/* Subtítulo */
+
+.dulce-login__subtitulo {
+    margin: 12px 0 22px;
+
+    color: #51216e;
+
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 2;
+    letter-spacing: 4px;
+
+    text-transform: uppercase;
+
+    text-shadow: 0 1px 6px rgba(255, 255, 255, .9);
+}
+
+/* Frase decorativa */
+
+.dulce-login__frase {
+    margin: 15px 0 0;
+
+    color: #50216e;
+
+    font-family: var(--font-decorativa);
+    font-size: 35px;
+    line-height: 1.2;
+
+    text-shadow:
+        0 2px 5px rgba(255, 255, 255, .9),
+        0 0 12px rgba(255, 255, 255, .6);
+}
+
+/* Pie de portada */
+
+.dulce-login__pie-portada {
+    position: relative;
+    z-index: 2;
+
+    width: 95%;
+
+    margin: 15px auto 0;
+    padding: 14px 12px;
+
+    color: #fff;
+
+    text-align: center;
+
+    font-family: var(--font-decorativa);
+    font-size: 22px;
+
+    background: rgba(105, 42, 132, .57);
+
+    border: 1px solid rgba(255, 255, 255, .55);
+    border-radius: 40px;
+
+    box-shadow: 0 5px 18px rgba(65, 20, 90, .15);
+
+    text-shadow: 0 2px 5px rgba(55, 15, 75, .65);
+}
+
+/* ==========================================
+   PANEL DERECHO
+   ========================================== */
+
+.dulce-login__panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 45px 65px;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            #ffffff 0,
+            #fffaff 65%,
+            #fff7ff 100%
+        );
+}
+
+/* Elementos decorativos */
+
+.dulce-login__adorno {
+    margin-bottom: 4px;
+
+    color: #a64bc1;
+
+    font-size: 27px;
+    font-weight: 500;
+    letter-spacing: 3px;
+}
+
+/* Bienvenida */
+
+.dulce-login__bienvenida {
+    margin: 0;
+
+    color: #54236e;
+
+    font-family: var(--font-decorativa);
+    font-size: clamp(65px, 6vw, 86px);
+    font-weight: 400;
+    line-height: 1.1;
+
+    text-align: center;
+}
+
+/* Descripción */
+
+.dulce-login__descripcion {
+    margin: 18px 0 10px;
+
+    color: #7a329b;
+
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 5px;
+
+    text-align: center;
+}
+
+/* Separador */
+
+.dulce-login__separador {
+    margin: 8px 0 25px;
+
+    color: #a94bc1;
+
+    font-size: 23px;
+    letter-spacing: 3px;
+}
+
+/* ==========================================
+   FORMULARIO
+   ========================================== */
+
+#formLogin {
+    width: 100%;
+    max-width: 540px;
+}
+
+/* Campos */
+
+.dulce-login__campo {
+    width: 100%;
+    margin-bottom: 23px;
+}
+
+/* Etiquetas */
+
+.dulce-login__label {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+    margin-bottom: 10px;
+
+    color: #54236e;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+/* Iconos de etiquetas */
+
+.dulce-login__icono-campo {
+    width: 42px;
+    height: 42px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-shrink: 0;
+
+    color: #582174;
+
+    font-size: 18px;
+
+    background: #f0d5fa;
+    border-radius: 50%;
+}
+
+/* Inputs */
+
+.dulce-login__input {
+    width: 100%;
+    height: 66px;
+
+    padding: 0 20px;
+
+    color: #51216e;
+
+    font-family: var(--font-principal);
+    font-size: 16px;
+
+    background: #fdf9ff;
+
+    border: 1.5px solid #dcb5ec;
+    border-radius: 19px;
+
+    outline: none;
+
+    box-shadow: 0 4px 10px rgba(125, 55, 155, .07);
+
+    transition: all .3s ease;
+}
+
+.dulce-login__input::placeholder {
+    color: #a184b1;
+}
+
+.dulce-login__input:focus {
+    background: #fff;
+
+    border-color: #a63ec5;
+
+    box-shadow: 0 0 0 4px rgba(174, 91, 205, .12);
+}
+
+/* Contenedor de contraseña */
+
+.dulce-login__input-contenedor {
+    position: relative;
+    width: 100%;
+}
+
+.dulce-login__input--password {
+    padding-right: 65px;
+}
+
+/* Mostrar contraseña */
+
+.dulce-login__ver-password {
+    position: absolute;
+
+    top: 50%;
+    right: 18px;
+
+    width: 35px;
+    height: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    color: #75448d;
+
+    background: transparent;
+    border: none;
+
+    transform: translateY(-50%);
+
+    cursor: pointer;
+
+    transition: color .3s ease;
+}
+
+.dulce-login__ver-password:hover {
+    color: #a342c1;
+}
+
+.dulce-login__ver-password svg {
+    width: 23px;
+    height: 23px;
+}
+
+/* ==========================================
+   OPCIONES DEL FORMULARIO
+   ========================================== */
+
+.dulce-login__opciones {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin: 4px 0 28px;
+}
+
+.dulce-login__recordarme {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    color: #54236e;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.dulce-login__recordarme input {
+    width: 19px;
+    height: 19px;
+
+    accent-color: #963db5;
+
+    cursor: pointer;
+}
+
+.dulce-login__enlace {
+    color: #9539b5;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    transition: color .3s ease;
+}
+
+.dulce-login__enlace:hover {
+    color: #592174;
+}
+
+/* ==========================================
+   BOTÓN DE INICIO DE SESIÓN
+   ========================================== */
+
+.dulce-login__boton {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 18px;
+
+    width: 100%;
+    min-height: 75px;
+
+    padding: 14px 22px;
+
+    overflow: hidden;
+
+    color: #fff;
+
+    font-family: var(--font-elegante);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 2px;
+
+    background: linear-gradient(
+        110deg,
+        #c16ed4,
+        #a33cbb,
+        #8429a3
+    );
+
+    border: 2px solid rgba(255, 255, 255, .85);
+    border-radius: 50px;
+
+    box-shadow:
+        0 12px 25px rgba(133, 45, 165, .30),
+        inset 0 2px 5px rgba(255, 255, 255, .35);
+
+    cursor: pointer;
+
+    transition: all .3s ease;
+}
+
+/* Brillo del botón */
+
+.dulce-login__boton::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 70%;
+    height: 100%;
+
+    background: linear-gradient(
+        110deg,
+        transparent,
+        rgba(255, 255, 255, .35),
+        transparent
+    );
+
+    transform: skewX(-20deg);
+
+    transition: left .6s ease;
+}
+
+.dulce-login__boton:hover {
+    background: linear-gradient(
+        110deg,
+        #a94bc1,
+        #8730a4,
+        #70228f
+    );
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 15px 30px rgba(126, 45, 160, .38);
+}
+
+.dulce-login__boton:hover::before {
+    left: 140%;
+}
+
+.dulce-login__boton:active {
+    transform: translateY(0) scale(.98);
+}
+
+.dulce-login__boton:focus-visible {
+    outline: 3px solid #c995e0;
+    outline-offset: 4px;
+}
+
+.dulce-login__boton:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Icono cupcake del botón */
+
+.dulce-login__boton-icono {
+    position: relative;
+    z-index: 1;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.dulce-login__boton-icono svg {
+    width: 43px;
+    height: 46px;
+
+    color: #fff;
+}
+
+/* Texto y flecha */
+
+.dulce-login__boton > span {
+    position: relative;
+    z-index: 1;
+}
+
+.dulce-login__boton-flecha {
+    font-family: var(--font-principal);
+    font-size: 32px;
+    font-weight: 400;
+}
+
+/* ==========================================
+   PIE DEL PANEL DERECHO
+   ========================================== */
+
+.dulce-login__pie {
+    margin-top: 28px;
+
+    color: #75418c;
+
+    font-family: var(--font-elegante);
+    font-size: 17px;
+    font-style: italic;
+
+    text-align: center;
+}
+
+.dulce-login__corazon {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: #b15acb;
+
+    font-size: 22px;
+    letter-spacing: 2px;
+}
+
+/* ==========================================
+   MENSAJES DE ERROR
+   ========================================== */
+
+.dulce-login__error {
+    margin-top: 8px;
+    padding-left: 8px;
+
+    color: #c0395c;
+
+    font-size: 13px;
+}
+
+.dulce-login__input.is-invalid {
+    border-color: #dc5574;
+}
+
+/* ==========================================
+   RESPONSIVE - TABLETAS
+   ========================================== */
+
+@media (max-width: 992px) {
+
+    .dulce-login {
+        padding: 25px 20px;
+    }
+
+    .dulce-login__contenedor {
+        width: 100%;
+        max-width: 850px;
+        min-height: auto;
+    }
+
+    .dulce-login__portada {
+        min-height: 760px;
+    }
+
+    .dulce-login__panel {
+        padding: 35px 30px;
+    }
+
+    .dulce-login__nombre {
+        font-size: 43px;
+    }
+
+    .dulce-login__bienvenida {
+        font-size: 65px;
+    }
+
+    .dulce-login__descripcion {
+        font-size: 13px;
+        letter-spacing: 3px;
+    }
+
+    .dulce-login__frase {
+        font-size: 29px;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - CELULARES
+   ========================================== */
+
+@media (max-width: 768px) {
+
+    .auth-main {
+        min-height: 100vh;
+    }
+
+    .dulce-login {
+        padding: 15px;
+    }
+
+    .dulce-login__contenedor {
+        width: 100%;
+        max-width: 520px;
+
+        min-height: auto;
+
+        grid-template-columns: 1fr;
+
+        border-radius: 24px;
+    }
+
+    .dulce-login__portada {
+        min-height: 460px;
+        padding: 25px 20px;
+    }
+
+    .dulce-login__marca {
+        transform: translateY(-5px);
+    }
+
+    .dulce-login__nombre {
+        font-size: 48px;
+    }
+
+    .dulce-login__icono svg {
+        width: 80px;
+        height: 85px;
+    }
+
+    .dulce-login__frase {
+        font-size: 30px;
+    }
+
+    .dulce-login__panel {
+        padding: 40px 25px;
+    }
+
+    .dulce-login__bienvenida {
+        font-size: 68px;
+    }
+
+    .dulce-login__descripcion {
+        font-size: 13px;
+        letter-spacing: 3px;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - CELULARES PEQUEÑOS
+   ========================================== */
+
+@media (max-width: 420px) {
+
+    .dulce-login__portada {
+        min-height: 390px;
+    }
+
+    .dulce-login__nombre {
+        font-size: 40px;
+    }
+
+    .dulce-login__subtitulo {
+        font-size: 12px;
+        letter-spacing: 3px;
+    }
+
+    .dulce-login__frase {
+        font-size: 27px;
+    }
+
+    .dulce-login__panel {
+        padding: 35px 18px;
+    }
+
+    .dulce-login__bienvenida {
+        font-size: 58px;
+    }
+
+    .dulce-login__opciones {
+        flex-wrap: wrap;
+    }
+
+    .dulce-login__boton {
+        gap: 10px;
+        font-size: 15px;
+    }
+
+    .dulce-login__boton-icono svg {
+        width: 34px;
+        height: 38px;
+    }
+}

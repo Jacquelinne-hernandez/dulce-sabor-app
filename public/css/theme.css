@@ -1,0 +1,119 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+/* ==========================================
+   DULCE SABOR SYS - TEMA
+   Variables compartidas por todas las vistas
+   ========================================== */
+:root {
+    /* Paleta */
+    --lila-fondo: #f5e8fa;
+    --lila-claro: #fffaff;
+    --lila-medio: #d7a5eb;
+    --lila-boton: #a94bc1;
+    --lila-hover: #8434a1;
+    --lila-oscuro: #50216e;
+    --lila-texto: #77518c;
+    --lila-borde: #dcb5ec;
+    --lila-suave: #f0d5fa;
+    --lila-tenue: #f9f0fc;
+    --blanco: #ffffff;
+
+    /* Tonos suaves (insignias, burbujas de íconos) */
+    --tono-primary-bg: #ecd9f8; --tono-primary-fg: #8434a1;
+    --tono-success-bg: #d6f5e6; --tono-success-fg: #1f9d63;
+    --tono-info-bg: #dfe8ff;    --tono-info-fg: #4a63d6;
+    --tono-warning-bg: #fdecc0; --tono-warning-fg: #b7791f;
+    --tono-danger-bg: #fddde6;  --tono-danger-fg: #d6335f;
+    --tono-secondary-bg: #efe4f7; --tono-secondary-fg: #77518c;
+    --tono-dark-bg: #e6dcee;    --tono-dark-fg: #50216e;
+
+    /* Tipografías */
+    --font-principal: 'DM Sans', sans-serif;
+    --font-elegante: 'Playfair Display', serif;
+    --font-decorativa: 'Great Vibes', cursive;
+
+    /* Medidas */
+    --header-alto: 64px;
+    --radio-sm: 12px;
+    --radio-md: 18px;
+    --radio-lg: 24px;
+    --radio-xl: 30px;
+    --radio-pill: 50px;
+
+    /* Sombras */
+    --sombra-suave: 0 8px 24px rgba(143, 73, 168, .10);
+    --sombra-media: 0 14px 32px rgba(143, 73, 168, .18);
+    --sombra-fuerte: 0 15px 35px rgba(119, 62, 151, .22);
+
+    /* Degradados */
+    --degradado-boton: linear-gradient(110deg, #c16ed4, #a33cbb, #8429a3);
+    --degradado-header: linear-gradient(110deg, #50216e 0%, #7a2f99 60%, #8f3cae 100%);
+    --degradado-fondo: linear-gradient(160deg, #fbf3ff 0%, #f1ddfa 55%, #e8cdf5 100%);
+    --degradado-tarjeta-titulo: linear-gradient(120deg, #fbf3ff 0%, #f1ddfa 55%, #ecc9f2 100%);
+
+    --transicion: .3s ease;
+}
+
+
+
+
+
+/*
+
+:root {
+    --lila-fondo: #f5e8fa;
+    --lila-claro: #fffaff;
+    --lila-medio: #d7a5eb;
+    --lila-boton: #a94bc1;
+    --lila-hover: #8434a1;
+    --lila-oscuro: #50216e;
+    --lila-texto: #77518c;
+    --lila-borde: #dcb5ec;
+    --lila-suave: #f0d5fa;
+    --lila-tenue: #f9f0fc;
+    --blanco: #ffffff;
+
+    --tono-primary-bg: #ecd9f8;
+    --tono-primary-fg: #8434a1;
+
+    --tono-success-bg: #d6f5e6;
+    --tono-success-fg: #1f9d63;
+
+    --tono-info-bg: #dfe8ff;
+    --tono-info-fg: #4a63d6;
+
+    --tono-warning-bg: #fdecc0;
+    --tono-warning-fg: #b7791f;
+
+    --tono-danger-bg: #fddde6;
+    --tono-danger-fg: #d6335f;
+
+    --tono-secondary-bg: #efe4f7;
+    --tono-secondary-fg: #77518c;
+
+    --tono-dark-bg: #e6dcee;
+    --tono-dark-fg: #50216e;
+
+    --font-principal: 'DM Sans', sans-serif;
+    --font-elegante: 'Playfair Display', serif;
+    --font-decorativa: 'Great Vibes', cursive;
+
+    --header-alto: 64px;
+
+    --radio-sm: 12px;
+    --radio-md: 18px;
+    --radio-lg: 24px;
+    --radio-xl: 30px;
+    --radio-pill: 50px;
+
+    --sombra-suave: 0 8px 24px rgba(143, 73, 168, .10);
+    --sombra-media: 0 14px 32px rgba(143, 73, 168, .18);
+    --sombra-fuerte: 0 15px 35px rgba(119, 62, 151, .22);
+
+    --degradado-boton: linear-gradient(110deg, #c16ed4, #a33cbb, #8429a3);
+    --degradado-header: linear-gradient(110deg, #50216e 0%, #7a2f99 60%, #8f3cae 100%);
+
+    --transicion: .3s ease;
+}
+*/

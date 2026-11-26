@@ -1,0 +1,17 @@
+/* ==========================================
+   DULCE SABOR SYS - FACTURAS
+   Requiere theme.css + global.css.
+   ========================================== */
+#modulo-facturas,
+#modal-facturas,
+#modal-facturas-detalle {
+    --mod-fg: #c97a1e;
+    --mod-bg: #ffe9cf;
+    --mod-hero: linear-gradient(120deg, #fffaf4 0%, #ffeed9 55%, #ffe1bd 100%);
+    --mod-border: #f7d5ad;
+    --mod-thead: linear-gradient(180deg, #fff5e8, #ffe8cc);
+    --mod-tint: #fffaf4;
+    --mod-glyph: "\f571";
+}
+#modulo-facturas > .d-flex:first-child { background: var(--mod-hero); }
+#tabla-facturas > tbody > tr > td:nth-child(5) { font-weight: 700; color: #c97a1e; }

@@ -1,0 +1,66 @@
+/* ==========================================
+   DULCE SABOR SYS - CATEGORÍAS (Con Íconos Finos)
+   ========================================== */
+#modulo-categorias,
+#modal-categorias {
+    --mod-fg: #4a63d6;
+    --mod-bg: #dfe8ff;
+    --mod-hero: linear-gradient(120deg, #f6f9ff 0%, #e4ecff 55%, #d4e0ff 100%);
+    --mod-border: #c2d3fc;
+    --mod-thead: linear-gradient(180deg, #edf2ff, #dfe8ff);
+    --mod-tint: #f6f9ff;
+    --mod-glyph: "\f02c";
+}
+
+#modulo-categorias > .d-flex:first-child { background: var(--mod-hero); }
+
+#tabla-categorias > tbody > tr > td:first-child {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    font-weight: 700;
+    color: var(--lila-oscuro);
+}
+
+#tabla-categorias > tbody > tr > td:first-child::before {
+    content: var(--cat-icon, "\f02c");
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    font-size: .98rem;
+    color: var(--cat-fg, #4a63d6);
+    background: radial-gradient(circle at 30% 25%, #fff 0%, var(--cat-bg, #dfe8ff) 80%);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 5px 12px rgba(74, 99, 214, .15);
+}
+
+/* Ícono y tono individual por categoría */
+#tabla-categorias > tbody > tr:nth-child(1) { --cat-icon: "\f0f4"; --cat-bg: #dfe8ff; --cat-fg: #4a63d6; } /* Bebidas */
+#tabla-categorias > tbody > tr:nth-child(2) { --cat-icon: "\f1fd"; --cat-bg: #ffe3ec; --cat-fg: #d6335f; } /* Cupcakes */
+#tabla-categorias > tbody > tr:nth-child(3) { --cat-icon: "\f563"; --cat-bg: #fff0c7; --cat-fg: #c28815; } /* Galletas */
+#tabla-categorias > tbody > tr:nth-child(4) { --cat-icon: "\f7f6"; --cat-bg: #ffead4; --cat-fg: #d46b17; } /* Pan dulce */
+#tabla-categorias > tbody > tr:nth-child(5) { --cat-icon: "\f1fd"; --cat-bg: #ece0fb; --cat-fg: #8a5cc4; } /* Pasteles */
+#tabla-categorias > tbody > tr:nth-child(6) { --cat-icon: "\f810"; --cat-bg: #d9f5e7; --cat-fg: #1f9d63; } /* Postres */
+
+/* Medalla circular para el contador de productos
+#tabla-categorias > tbody > tr > td:nth-child(3) .badge,
+#tabla-categorias > tbody > tr > td:nth-child(3) span {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: inline-grid;
+    place-items: center;
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--cat-fg, #4a63d6) !important;
+    background: radial-gradient(circle at 30% 25%, #fff 0%, var(--cat-bg, #dfe8ff) 80%) !important;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 5px 12px rgba(74, 99, 214, .16);
+}
+*/

@@ -1,0 +1,27 @@
+/* ==========================================
+   DULCE SABOR SYS - BITÁCORA
+   Requiere theme.css + global.css.
+   ========================================== */
+#modulo-bitacora,
+#modal-bitacora {
+    --mod-fg: #d9a21b;
+    --mod-bg: #fff1c9;
+    --mod-hero: linear-gradient(120deg, #fffdf5 0%, #fff4d4 55%, #fde8b0 100%);
+    --mod-border: #f5de9d;
+    --mod-thead: linear-gradient(180deg, #fff9e6, #fdf0c7);
+    --mod-tint: #fffdf5;
+    --mod-glyph: "\f46d";
+}
+
+#modulo-bitacora > .d-flex:first-child { background: var(--mod-hero); }
+
+#modulo-bitacora > form.card {
+    background: rgba(255, 255, 255, .95) !important;
+    border: 1px solid rgba(255, 255, 255, .95);
+    border-radius: var(--radio-lg);
+    box-shadow: var(--sombra-suave) !important;
+    margin-bottom: 1.1rem !important;
+}
+#modulo-bitacora > form.card .card-body { padding: 1.25rem 1.4rem; }
+#tabla-bitacora > tbody > tr > td { font-size: .88rem; }
+#tabla-bitacora > tbody > tr > td:first-child { font-weight: 500; color: var(--lila-texto); }

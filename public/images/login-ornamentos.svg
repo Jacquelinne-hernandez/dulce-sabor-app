@@ -1,0 +1,95 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" fill="none">
+    <defs>
+        <linearGradient id="ondas" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#c77bdf"/>
+            <stop offset="1" stop-color="#edb9f4"/>
+        </linearGradient>
+        <linearGradient id="ondas2" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#e9b5f3"/>
+            <stop offset="1" stop-color="#bd72d7"/>
+        </linearGradient>
+        <linearGradient id="cupcake" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#dca1ed"/>
+            <stop offset="1" stop-color="#a94fc5"/>
+        </linearGradient>
+    </defs>
+
+    <!-- Ondas superiores izquierdas -->
+    <path d="M0 0H470C405 72 342 57 279 95C211 136 183 207 105 207H0Z"
+          fill="url(#ondas)" opacity=".75"/>
+    <path d="M0 0H330C278 52 239 68 188 72C115 81 75 154 0 166Z"
+          fill="#d18be5" opacity=".55"/>
+    <path d="M0 0H270C224 48 189 68 140 78C82 91 48 132 0 145"
+          stroke="#f9e8ff" stroke-width="2"/>
+
+    <!-- Ondas inferiores derechas -->
+    <path d="M1536 1024H1080C1160 969 1195 945 1270 945C1360 945 1410 870 1536 850Z"
+          fill="url(#ondas2)" opacity=".72"/>
+    <path d="M1536 1024H1260C1340 984 1378 933 1430 916C1472 901 1500 870 1536 842Z"
+          fill="#d18be5" opacity=".65"/>
+    <path d="M1536 1024H1180C1260 982 1325 954 1380 941"
+          stroke="#f9e8ff" stroke-width="2"/>
+
+    <!-- Corazón lateral izquierdo -->
+    <path d="M63 219C42 193 77 182 91 210C105 179 139 194 113 223L88 248Z"
+          stroke="#c27bd9" stroke-width="6" stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <path d="M44 451C28 432 55 420 66 442C78 419 105 435 83 458L65 477Z"
+          stroke="#c27bd9" stroke-width="5" stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <!-- Corazón superior -->
+    <path d="M1215 61C1197 42 1225 28 1237 51C1252 27 1277 45 1255 69L1236 86Z"
+          stroke="#c27bd9" stroke-width="5" stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <!-- Corazón lateral derecho -->
+    <path d="M1445 243C1425 219 1457 204 1470 231C1487 207 1511 228 1487 252L1466 274Z"
+          stroke="#b968d0" stroke-width="6" stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <path d="M1446 546C1427 521 1458 508 1472 534C1488 509 1514 531 1489 556L1467 578Z"
+          stroke="#b968d0" stroke-width="6" stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <!-- Manga pastelera -->
+    <g transform="translate(20 272) rotate(-35)" stroke="#c78add"
+       stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22L34 5L40 24L88 119L62 145L17 54Z"/>
+        <path d="M17 54L40 24"/>
+        <path d="M62 145L72 172L88 119"/>
+        <path d="M12 22L3 2M25 14L21 -4M39 24L48 7"/>
+        <path d="M17 54L88 119"/>
+    </g>
+
+    <!-- Cupcake superior derecho -->
+    <g transform="translate(1380 35)" stroke="#c17ad8"
+       stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 65C-2 48 12 31 35 33C37 8 68 5 80 25C104 8 135 29 125 52C148 65 134 91 112 94H34C13 91 2 80 13 65Z"/>
+        <path d="M30 94L44 151H108L123 94"/>
+        <path d="M44 151L108 151M59 101L63 143M83 101L83 143M105 101L99 143"/>
+        <path d="M63 22C61 5 83 0 89 17" />
+        <path d="M72 19C82 -3 108 12 96 29C86 39 73 19 72 19Z"
+              fill="url(#cupcake)"/>
+    </g>
+
+    <!-- Cupcake pequeño superior derecho -->
+    <g transform="translate(1300 110) scale(.72)" stroke="#c17ad8"
+       stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 65C-2 48 12 31 35 33C37 8 68 5 80 25C104 8 135 29 125 52C148 65 134 91 112 94H34C13 91 2 80 13 65Z"/>
+        <path d="M30 94L44 151H108L123 94"/>
+        <path d="M44 151L108 151M59 101L63 143M83 101L83 143M105 101L99 143"/>
+    </g>
+
+    <!-- Cupcake pequeño inferior derecho -->
+    <g transform="translate(1440 735) scale(.60)" stroke="#c17ad8"
+       stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 65C-2 48 12 31 35 33C37 8 68 5 80 25C104 8 135 29 125 52C148 65 134 91 112 94H34C13 91 2 80 13 65Z"/>
+        <path d="M30 94L44 151H108L123 94"/>
+        <path d="M44 151L108 151M59 101L63 143M83 101L83 143M105 101L99 143"/>
+        <path d="M65 20C65 0 89 0 91 18C111 8 119 34 96 43C78 44 65 20 65 20Z"
+              fill="url(#cupcake)"/>
+    </g>
+</svg>

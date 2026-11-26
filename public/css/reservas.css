@@ -1,0 +1,15 @@
+/* ==========================================
+   DULCE SABOR SYS - RESERVAS
+   Requiere theme.css + global.css.
+   ========================================== */
+#modulo-reservas,
+#modal-reservas {
+    --mod-fg: #1f9d63;
+    --mod-bg: #d9f5e7;
+    --mod-hero: linear-gradient(120deg, #f4fcf8 0%, #dff7eb 55%, #c9f0dd 100%);
+    --mod-border: #b6ebd1;
+    --mod-thead: linear-gradient(180deg, #ebfaf2, #d6f5e6);
+    --mod-tint: #f4fcf8;
+    --mod-glyph: "\f274";
+}
+#modulo-reservas > .d-flex:first-child { background: var(--mod-hero); }

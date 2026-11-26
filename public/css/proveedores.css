@@ -1,0 +1,15 @@
+/* ==========================================
+   DULCE SABOR SYS - PROVEEDORES
+   Requiere theme.css + global.css.
+   ========================================== */
+#modulo-proveedores,
+#modal-proveedores {
+    --mod-fg: #1c8c7e;
+    --mod-bg: #d6f4ef;
+    --mod-hero: linear-gradient(120deg, #f3fcfb 0%, #dcf7f3 55%, #c5efe8 100%);
+    --mod-border: #b0e8df;
+    --mod-thead: linear-gradient(180deg, #e8faf7, #d6f4ef);
+    --mod-tint: #f3fcfb;
+    --mod-glyph: "\f0d1";
+}
+#modulo-proveedores > .d-flex:first-child { background: var(--mod-hero); }

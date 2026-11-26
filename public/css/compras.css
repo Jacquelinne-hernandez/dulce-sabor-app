@@ -1,0 +1,17 @@
+/* ==========================================
+   DULCE SABOR SYS - COMPRAS
+   Requiere theme.css + global.css.
+   ========================================== */
+#modulo-compras,
+#modal-compras,
+#modal-compras-detalle {
+    --mod-fg: #c28815;
+    --mod-bg: #fff0c7;
+    --mod-hero: linear-gradient(120deg, #fffdf5 0%, #fff3d1 55%, #fde7ad 100%);
+    --mod-border: #f5dc98;
+    --mod-thead: linear-gradient(180deg, #fff8e3, #fdefc5);
+    --mod-tint: #fffdf5;
+    --mod-glyph: "\f291";
+}
+#modulo-compras > .d-flex:first-child { background: var(--mod-hero); }
+#tabla-compras > tbody > tr > td:nth-child(6) { font-weight: 700; color: #c28815; }

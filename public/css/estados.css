@@ -1,0 +1,159 @@
+/* ==========================================
+   DULCE SABOR SYS - ESTADOS (Fichas Visuales)
+   Requiere theme.css + global.css.
+   ========================================== */
+#modulo-estados,
+#modal-estados {
+    --mod-fg: #1f9d63;
+    --mod-bg: #d6f5e6;
+    --mod-hero: linear-gradient(120deg, #f4fcf8 0%, #def7eb 55%, #c7f0dc 100%);
+    --mod-border: #b3ebd0;
+    --mod-thead: linear-gradient(180deg, #eafaf2, #d6f5e6);
+    --mod-tint: #f4fcf8;
+    --mod-glyph: "\f205";
+}
+
+#modulo-estados > .d-flex:first-child {
+    background: var(--mod-hero);
+}
+
+#modulo-estados > .card > .table-responsive {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+}
+
+#tabla-estados {
+    display: block;
+    border: 0 !important;
+    overflow: visible !important;
+}
+
+#tabla-estados > thead {
+    display: none;
+}
+
+#tabla-estados > tbody {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 1.15rem;
+}
+
+#tabla-estados > tbody > tr {
+    --est-bg: #ece0fb;
+    --est-fg: #8a5cc4;
+    --est-accent: #c7a6f2;
+    --est-icon: "\f02b";
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem 1.45rem 1.2rem 1.6rem;
+    background: rgba(255, 255, 255, .96);
+    border: 1.5px solid #fff;
+    border-left: 6px solid var(--est-accent);
+    border-radius: 24px;
+    box-shadow: var(--sombra-suave);
+    transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+#tabla-estados > tbody > tr:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sombra-media);
+}
+
+/* Estados base diferenciados por color e ícono */
+#tabla-estados > tbody > tr:nth-child(1) {
+    --est-bg: #d6f5e6;
+    --est-fg: #1f9d63;
+    --est-accent: #52c991;
+    --est-icon: "\f058";
+}
+#tabla-estados > tbody > tr:nth-child(2) {
+    --est-bg: #fff0c7;
+    --est-fg: #c28815;
+    --est-accent: #f3c456;
+    --est-icon: "\f023";
+}
+#tabla-estados > tbody > tr:nth-child(3) {
+    --est-bg: #ffdce5;
+    --est-fg: #e0486d;
+    --est-accent: #f27c99;
+    --est-icon: "\f2ed";
+}
+
+#tabla-estados > tbody > tr:has(td[colspan]) {
+    grid-column: 1 / -1;
+    border-left: 0;
+}
+
+#tabla-estados > tbody > tr > td {
+    border: 0 !important;
+    padding: 0;
+    background: transparent !important;
+}
+
+/* Número # como etiqueta discreta arriba a la derecha */
+#tabla-estados > tbody > tr > td:nth-child(1) {
+    position: absolute;
+    top: 1.15rem;
+    right: 1.35rem;
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--est-fg);
+    background: var(--est-bg);
+    padding: .2rem .65rem;
+    border-radius: var(--radio-pill);
+}
+#tabla-estados > tbody > tr > td:nth-child(1)::before {
+    content: "#";
+}
+
+/* Nombre del estado + medalla circular */
+#tabla-estados > tbody > tr > td:nth-child(2) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .65rem;
+    padding-right: 3.2rem;
+    margin-bottom: .75rem;
+    font-size: 1.12rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+    color: var(--lila-oscuro);
+}
+
+#tabla-estados > tbody > tr > td:nth-child(2)::before {
+    content: var(--est-icon);
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    font-size: 1.1rem;
+    color: var(--est-fg);
+    background: radial-gradient(circle at 30% 25%, #fff 0%, var(--est-bg) 80%);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 6px 14px rgba(143, 73, 168, .14);
+}
+
+/* Descripción */
+#tabla-estados > tbody > tr > td:nth-child(3) {
+    font-size: .92rem;
+    line-height: 1.45;
+    color: var(--lila-texto);
+    margin-bottom: 1rem;
+    flex: 1;
+}
+
+/* Pie de ficha con acciones */
+#tabla-estados > tbody > tr > td:nth-child(4) {
+    display: flex;
+    justify-content: flex-end;
+    gap: .35rem;
+    padding-top: .75rem;
+    border-top: 1px dashed #eedcf7 !important;
+}

@@ -1,0 +1,17 @@
+/* ==========================================
+   DULCE SABOR SYS - PEDIDOS
+   Requiere theme.css + global.css.
+   ========================================== */
+#modulo-pedidos,
+#modal-pedidos,
+#modal-pedidos-detalle {
+    --mod-fg: #d6335f;
+    --mod-bg: #ffe3ec;
+    --mod-hero: linear-gradient(120deg, #fff7fa 0%, #ffe6ef 55%, #ffd4e3 100%);
+    --mod-border: #f8c6d6;
+    --mod-thead: linear-gradient(180deg, #fff0f5, #ffe0eb);
+    --mod-tint: #fff7fa;
+    --mod-glyph: "\f07a";
+}
+#modulo-pedidos > .d-flex:first-child { background: var(--mod-hero); }
+#tabla-pedidos > tbody > tr > td:nth-child(5) { font-weight: 700; color: #d6335f; }
