@@ -16,6 +16,25 @@ class InsertarCompraRequest extends FormRequest
     {
         return Compra::validaciones();
     }
+    // Cada producto de la compra debe estar entre los que ofrece el proveedor.
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            if ($validator->errors()->isNotEmpty()) {
+                return;
+            }
+
+            $ids = collect($this->input('detalles', []))->pluck('id_producto');
+
+            if (!\App\Models\Proveedor::ofreceProductos((int) $this->input('id_proveedor'), $ids)) {
+                $validator->errors()->add(
+                    'detalles',
+                    'Uno o más productos no son ofrecidos por el proveedor seleccionado. '
+                    . 'Asígnelos al proveedor en la pantalla de Proveedores.'
+                );
+            }
+        });
+    }
 
     public function messages(): array
     {

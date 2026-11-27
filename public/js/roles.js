@@ -1,30 +1,34 @@
+
+/*
+ * roles.js
+ * Consulta de roles (fijos, creados por el seeder): solo lectura.
+ */
 $(function () {
-    // Roles base: de ellos dependen los permisos de las rutas.
-    const BASE = ['Administrador', 'Operador'];
+    const $raiz = $('#modulo-roles');
+    const $cuerpo = $('#tabla-roles tbody');
 
-    App.crud({
-        raiz: '#modulo-roles',
-        tabla: '#tabla-roles tbody',
-        clave: 'roles',
-        llave: 'rol',
-        modal: '#modal-roles',
-        form: '#form-roles',
-        tituloNuevo: 'Nuevo rol',
-        tituloEditar: 'Editar rol',
-        eliminar: {
-            titulo: 'Eliminar rol',
-            mensaje: function (r) { return '¿Desea eliminar el rol "' + r.nombre + '"?'; }
-        },
-        fila: function (r) {
-            const base = BASE.indexOf(r.nombre) !== -1;
+    $cuerpo.html('<tr><td colspan="3"><span class="spinner-border spinner-border-sm me-2"></span>Cargando...</td></tr>');
 
-            return '<tr>' +
-                '<td>' + r.id + '</td>' +
-                '<td class="fw-semibold">' + App.esc(r.nombre) +
-                (base ? ' <span class="badge text-bg-secondary">Base</span>' : '') + '</td>' +
-                '<td>' + App.esc(r.descripcion || '—') + '</td>' +
-                '<td class="text-end">' + App.botonesCrud(r.id, { eliminar: !base }) + '</td>' +
-                '</tr>';
-        }
-    });
+    App.peticion('GET', $raiz.data('urlTodos'))
+        .done(function (r) {
+            const roles = r.roles || [];
+
+            if (!roles.length) {
+                $cuerpo.html('<tr><td colspan="3">No hay roles registrados.</td></tr>');
+
+                return;
+            }
+
+            $cuerpo.html(roles.map(function (rol) {
+                return '<tr>' +
+                    '<td>' + rol.id + '</td>' +
+                    '<td class="fw-semibold">' + App.esc(rol.nombre) + '</td>' +
+                    '<td>' + App.esc(rol.descripcion || '—') + '</td>' +
+                    '</tr>';
+            }).join(''));
+        })
+        .fail(function (xhr) {
+            $cuerpo.html('<tr><td colspan="3" class="text-danger">No se pudieron cargar los roles.</td></tr>');
+            App.notificarError(xhr);
+        });
 });

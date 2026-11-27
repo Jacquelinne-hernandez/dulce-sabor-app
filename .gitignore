@@ -28,3 +28,6 @@ Thumbs.db
 .backup-fase1/
 
 .backup-fase2/
+
+# Imágenes subidas desde el sistema (fotos de productos)
+/storage/app/files

@@ -17,7 +17,7 @@ class CompraController extends Controller
     // producto para compararlo con el precio de compra.
     public function index()
     {
-        $proveedores = Proveedor::orderBy('nombre')->get();
+        $proveedores = Proveedor::mostrarConProductos();
 
         $productos = Producto::where('estado', '!=', 'inactivo')
             ->orderBy('nombre')

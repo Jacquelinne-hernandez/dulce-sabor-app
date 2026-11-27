@@ -39,7 +39,9 @@ class ActualizarProveedorRequest extends FormRequest
             'direccion.string' => 'La dirección debe ser una cadena de texto.',
             'direccion.max' => 'La dirección no debe superar los 200 caracteres.',
             'descripcion.string' => 'La descripción debe ser una cadena de texto.',
-            'descripcion.max' => 'La descripción no debe superar los 250 caracteres.'
+            'descripcion.max' => 'La descripción no debe superar los 250 caracteres.',
+
+            ...Proveedor::mensajes()
         ];
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ActualizarProveedorRequest;
 use App\Http\Requests\InsertarProveedorRequest;
 use App\Models\Bitacora;
+use App\Models\Categoria;
+use App\Models\Producto;
 use App\Models\Proveedor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -14,13 +16,38 @@ class ProveedorController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
+    | Datos validados
+    |
+    | validated() omite una lista de productos vacía; se restablece para que
+    | el administrador pueda quitar todos los productos de un proveedor.
+    |--------------------------------------------------------------------------
+    */
+
+    private function datos($request): array
+    {
+        $datos = $request->validated();
+
+        if ($request->has('productos') && !isset($datos['productos'])) {
+            $datos['productos'] = [];
+        }
+
+        return $datos;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Vista principal
     |--------------------------------------------------------------------------
     */
 
     public function index(): View
     {
-        return view('proveedor.proveedores');
+        // Productos comprados que se pueden asignar al proveedor y
+        // categorías para dar de alta uno nuevo desde el mismo formulario.
+        return view('proveedor.proveedores', [
+            'productos' => Producto::mostrarComprados(),
+            'categorias' => Categoria::orderBy('nombre')->get(),
+        ]);
     }
 
     /*
@@ -45,7 +72,7 @@ class ProveedorController extends Controller
 
     public function insertarProveedor(InsertarProveedorRequest $request): JsonResponse
     {
-        $proveedor = Proveedor::insertar($request->validated());
+        $proveedor = Proveedor::insertar($this->datos($request));
 
         Bitacora::registrar(
             Bitacora::CREADO,
@@ -95,7 +122,7 @@ class ProveedorController extends Controller
         ActualizarProveedorRequest $request,
                                    $id
     ): JsonResponse {
-        $proveedor = Proveedor::actualizar($id, $request->validated());
+        $proveedor = Proveedor::actualizar($id, $this->datos($request));
 
         if (!$proveedor) {
             return response()->json([

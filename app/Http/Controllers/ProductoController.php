@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ActualizarProductoRequest;
 use App\Http\Requests\InsertarProductoRequest;
+use App\Http\Requests\SubirImagenProductoRequest;
 use App\Models\Bitacora;
 use App\Models\Categoria;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProductoController extends Controller
 {
@@ -147,6 +149,100 @@ class ProductoController extends Controller
             'success' => true,
             'mensaje' => 'Producto reactivado correctamente.',
             'producto' => $producto->makeVisible('costo'),
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Imágenes de los productos
+    |
+    | Los archivos viven en storage/app/files/productos (fuera de public) y
+    | se entregan por esta ruta solo a usuarios con sesión activa.
+    |--------------------------------------------------------------------------
+    */
+
+    // Placeholder que se muestra cuando la imagen no existe o se perdió:
+    // el sistema nunca devuelve error por una foto faltante.
+    private const IMAGEN_PERDIDA = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">'
+        . '<rect width="120" height="120" fill="#f3e8f8"/>'
+        . '<path d="M30 78h60v14a6 6 0 0 1-6 6H36a6 6 0 0 1-6-6z" fill="#c9a2dc"/>'
+        . '<path d="M36 78V58a24 24 0 0 1 48 0v20z" fill="#e3c5f0"/>'
+        . '<circle cx="60" cy="30" r="5" fill="#d6336c"/></svg>';
+
+    public function imagen($id)
+    {
+        $ruta = Producto::whereKey($id)->value('imagen');
+
+        if ($ruta && str_starts_with($ruta, Producto::CARPETA_IMAGENES . '/')) {
+            $disco = Storage::disk(Producto::DISCO);
+
+            if ($disco->exists($ruta)) {
+                return $disco->response($ruta, null, [
+                    'Cache-Control' => 'private, max-age=86400',
+                    'X-Content-Type-Options' => 'nosniff',
+                ]);
+            }
+        }
+
+        return response(self::IMAGEN_PERDIDA, 200, [
+            'Content-Type' => 'image/svg+xml',
+            'Cache-Control' => 'no-store',
+        ]);
+    }
+
+    public function subirImagen(SubirImagenProductoRequest $request, $id)
+    {
+        $producto = Producto::buscarProductoXId($id);
+
+        if (!$producto || $producto->estado === 'inactivo') {
+            return response()->json([
+                'success' => false,
+                'mensaje' => 'El producto no existe o se encuentra inactivo.',
+            ], 404);
+        }
+
+        Producto::guardarImagen($producto, $request->file('imagen'));
+
+        Bitacora::registrar(
+            Bitacora::ACTUALIZADO,
+            'PRODUCTOS',
+            $producto->id,
+            'Se actualizó la imagen del producto: ' . $producto->nombre,
+            Auth::user()?->nombre
+        );
+
+        return response()->json([
+            'success' => true,
+            'mensaje' => 'Imagen guardada correctamente.',
+            'producto' => $producto->fresh('categoria')->makeVisible('costo'),
+        ]);
+    }
+
+    public function quitarImagen($id)
+    {
+        $producto = Producto::buscarProductoXId($id);
+
+        if (!$producto) {
+            return response()->json([
+                'success' => false,
+                'mensaje' => 'El producto solicitado no existe.',
+            ], 404);
+        }
+
+        Producto::quitarImagen($producto);
+
+        Bitacora::registrar(
+            Bitacora::ACTUALIZADO,
+            'PRODUCTOS',
+            $producto->id,
+            'Se quitó la imagen del producto: ' . $producto->nombre,
+            Auth::user()?->nombre
+        );
+
+        return response()->json([
+            'success' => true,
+            'mensaje' => 'Imagen eliminada correctamente.',
+            'producto' => $producto->fresh('categoria')->makeVisible('costo'),
         ]);
     }
 

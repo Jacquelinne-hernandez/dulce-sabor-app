@@ -28,7 +28,8 @@ $(function () {
         },
         fila: function (u) {
             return '<tr>' +
-                '<td class="fw-semibold">' + App.esc(u.nombre + ' ' + u.apellido) + '</td>' +
+                '<td class="fw-semibold">' + App.esc(u.nombre + ' ' + u.apellido) +
+                (u.debe_cambiar_password ? ' <span class="badge text-bg-warning" title="Debe cambiar su contraseña al ingresar">Contraseña pendiente</span>' : '') + '</td>' +
                 '<td>' + App.esc(u.email) + '</td>' +
                 '<td>' + App.esc(u.telefono || '—') + '</td>' +
                 '<td>' + App.esc(u.rol ? u.rol.nombre : '—') + '</td>' +

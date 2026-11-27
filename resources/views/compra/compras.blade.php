@@ -14,7 +14,17 @@
      data-url-abonos="{{ route('compras.abonos', ['id' => '__ID__']) }}"
      data-url-deudas="{{ route('compras.deudas') }}"
      data-productos="{{ $productos->map(fn ($p) => ['id' => $p->id, 'nombre' => $p->nombre, 'costo' => $p->costo, 'stock' => $p->stock])->values()->toJson() }}"
-     data-proveedores="{{ $proveedores->map(fn ($p) => ['id' => $p->id, 'nombre' => $p->nombre])->values()->toJson() }}">
+     data-proveedores="{{ $proveedores->map(fn ($p) => [
+         'id' => $p->id,
+         'nombre' => $p->nombre,
+         'productos' => $p->productos->map(fn ($x) => [
+             'id' => $x->id,
+             'nombre' => $x->nombre,
+             'stock' => $x->stock,
+             'costo' => $x->costo,
+             'precio_compra' => $x->pivot->precio_compra,
+         ])->values(),
+     ])->values()->toJson() }}">
 
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <div>

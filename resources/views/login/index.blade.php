@@ -196,10 +196,9 @@
 
                         </label>
 
-                        <a href="#" class="dulce-login__enlace">
-                            ¿Olvidaste tu contraseña?
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </a>
+                        <span class="dulce-login__nota">
+                            Si olvidó su contraseña, solicite su restablecimiento al administrador.
+                        </span>
 
                     </div>
 

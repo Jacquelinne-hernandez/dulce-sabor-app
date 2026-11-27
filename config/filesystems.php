@@ -47,6 +47,16 @@ return [
             'report' => false,
         ],
 
+        // Imágenes de productos: storage/app/files. No es una carpeta pública:
+        // el sistema las entrega por una ruta protegida (productos.imagen).
+        'files' => [
+            'driver' => 'local',
+            'root' => storage_path('app/files'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

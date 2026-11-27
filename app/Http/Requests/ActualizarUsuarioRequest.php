@@ -56,7 +56,9 @@ class ActualizarUsuarioRequest extends FormRequest
 
             'telefono.string' => 'El teléfono debe ser una cadena de texto.',
             'telefono.regex' => 'El teléfono debe tener 8 dígitos con el formato 0000-0000.',
-            'telefono.unique' => 'Ya existe otro usuario con ese teléfono.'
+            'telefono.unique' => 'Ya existe otro usuario con ese teléfono.',
+
+            ...Usuario::mensajesPassword()
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,27 +22,21 @@ class Usuario extends Authenticatable
         'apellido',
         'email',
         'password',
-        'telefono'
+        'telefono',
+        'debe_cambiar_password'
     ];
 
     protected $hidden = [
-        'password'
+        'password',
+        'remember_token'
     ];
 
     protected $casts = [
         'id_rol' => 'integer',
         'id_estado' => 'integer',
-        'password' => 'hashed'
+        'password' => 'hashed',
+        'debe_cambiar_password' => 'boolean'
     ];
-
-    /**
-     * La tabla usuarios no tiene la columna remember_token, por lo que
-     * se desactiva el "recordarme" de Laravel.
-     */
-    public function getRememberTokenName()
-    {
-        return '';
-    }
 
     //Relación
     public function compras(): HasMany
@@ -114,21 +109,7 @@ class Usuario extends Authenticatable
                 Rule::unique('usuarios', 'email')->ignore($id)
             ],
 
-            'password' => $id === null
-                ? [
-                    'required',
-                    'string',
-                    'min:8',
-                    'max:255',
-                    'confirmed'
-                ]
-                : [
-                    'nullable',
-                    'string',
-                    'min:8',
-                    'max:255',
-                    'confirmed'
-                ],
+            'password' => static::reglasPassword($id === null),
 
             'telefono' => [
                 'nullable',
@@ -136,6 +117,48 @@ class Usuario extends Authenticatable
                 'regex:/^\d{4}-\d{4}$/',
                 Rule::unique('usuarios', 'telefono')->ignore($id)
             ]
+        ];
+    }
+
+
+    // Política de contraseñas: mínimo 8 caracteres, con mayúscula,
+    // minúscula, número y un carácter especial, sin espacios.
+    public static function reglasPassword(bool $obligatoria = true): array
+    {
+        return [
+            $obligatoria ? 'required' : 'nullable',
+            'string',
+            'min:8',
+            'max:72',
+            'confirmed',
+            function (string $atributo, $valor, \Closure $fallar) {
+                if (!is_string($valor) || $valor === '') {
+                    return;
+                }
+
+                if (preg_match('/\s/u', $valor)) {
+                    $fallar('La contraseña no debe contener espacios.');
+                } elseif (!preg_match('/\p{Ll}/u', $valor)) {
+                    $fallar('La contraseña debe incluir al menos una letra minúscula.');
+                } elseif (!preg_match('/\p{Lu}/u', $valor)) {
+                    $fallar('La contraseña debe incluir al menos una letra mayúscula.');
+                } elseif (!preg_match('/\d/', $valor)) {
+                    $fallar('La contraseña debe incluir al menos un número.');
+                } elseif (!preg_match('/[^\p{L}\p{N}\s]/u', $valor)) {
+                    $fallar('La contraseña debe incluir al menos un carácter especial (por ejemplo ! @ # $ % & *).');
+                }
+            },
+        ];
+    }
+
+    public static function mensajesPassword(): array
+    {
+        return [
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.string' => 'La contraseña debe ser una cadena de texto.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.max' => 'La contraseña no debe superar los 72 caracteres.',
+            'password.confirmed' => 'La confirmación de la contraseña no coincide.',
         ];
     }
 
@@ -187,6 +210,10 @@ class Usuario extends Authenticatable
     // Insertar un nuevo usuario
     public static function insertar($datos)
     {
+        // El administrador define una contraseña inicial: el usuario debe
+        // cambiarla antes de poder usar el sistema.
+        $datos['debe_cambiar_password'] = true;
+
         return self::create($datos);
     }
 
@@ -203,6 +230,11 @@ class Usuario extends Authenticatable
         // Si no se envía una nueva contraseña, se conserva la actual.
         if (empty($datos['password'])) {
             unset($datos['password']);
+        } else {
+            // Si el administrador restablece la contraseña de otra persona,
+            // esa persona debe cambiarla al ingresar; si cambia la propia,
+            // no hace falta.
+            $datos['debe_cambiar_password'] = (int) $id !== (int) Auth::id();
         }
 
         $usuario->update($datos);

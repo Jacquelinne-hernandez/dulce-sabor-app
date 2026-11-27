@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ActualizarUsuarioRequest;
 use App\Http\Requests\InsertarUsuarioRequest;
+use App\Mail\UsuarioCreadoMail;
 use App\Models\Bitacora;
+use App\Support\Correo;
 use App\Models\Estado;
 use App\Models\Rol;
 use App\Models\Usuario;
@@ -43,6 +45,9 @@ class UsuarioController extends Controller
             $usuario->id,
             'Se registró el usuario: ' . $usuario->nombre . ' ' . $usuario->apellido
         );
+
+        // Aviso por correo al nuevo usuario (no interrumpe si falla el envío).
+        Correo::enviar($usuario->email, new UsuarioCreadoMail($usuario));
 
         return response()->json([
             'success' => true,

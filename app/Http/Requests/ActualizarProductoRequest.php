@@ -3,10 +3,12 @@
 namespace App\Http\Requests;
 
 use App\Models\Producto;
+use App\Http\Requests\Concerns\NormalizaDatos;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ActualizarProductoRequest extends FormRequest
 {
+    use NormalizaDatos;
     public function authorize(): bool
     {
         return true;
@@ -49,8 +51,7 @@ class ActualizarProductoRequest extends FormRequest
 
             'descripcion.string' => 'La descripción debe ser texto.',
 
-            'imagen.string' => 'La ruta de la imagen debe ser texto.',
-            'imagen.max' => 'La ruta de la imagen no puede superar los 255 caracteres.',
+            ...Producto::mensajes(),
         ];
     }
 }

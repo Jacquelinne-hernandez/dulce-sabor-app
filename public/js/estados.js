@@ -1,30 +1,34 @@
+
+/*
+ * estados.js
+ * Consulta de estados (fijos, creados por el seeder): solo lectura.
+ */
 $(function () {
-    // Estados base: el login y la eliminación lógica dependen de ellos.
-    const BASE_IDS = [1, 2, 3];
+    const $raiz = $('#modulo-estados');
+    const $cuerpo = $('#tabla-estados tbody');
 
-    App.crud({
-        raiz: '#modulo-estados',
-        tabla: '#tabla-estados tbody',
-        clave: 'estados',
-        llave: 'estado',
-        modal: '#modal-estados',
-        form: '#form-estados',
-        tituloNuevo: 'Nuevo estado',
-        tituloEditar: 'Editar estado',
-        eliminar: {
-            titulo: 'Eliminar estado',
-            mensaje: function (e) { return '¿Desea eliminar el estado "' + e.estado + '"?'; }
-        },
-        fila: function (e) {
-            const base = BASE_IDS.indexOf(e.id) !== -1;
+    $cuerpo.html('<tr><td colspan="3"><span class="spinner-border spinner-border-sm me-2"></span>Cargando...</td></tr>');
 
-            return '<tr>' +
-                '<td>' + e.id + '</td>' +
-                '<td class="fw-semibold">' + App.esc(e.estado) +
-                (base ? ' <span class="badge text-bg-secondary">Base</span>' : '') + '</td>' +
-                '<td>' + App.esc(e.descripcion || '—') + '</td>' +
-                '<td class="text-end">' + App.botonesCrud(e.id, { eliminar: !base }) + '</td>' +
-                '</tr>';
-        }
-    });
+    App.peticion('GET', $raiz.data('urlTodos'))
+        .done(function (r) {
+            const estados = r.estados || [];
+
+            if (!estados.length) {
+                $cuerpo.html('<tr><td colspan="3">No hay estados registrados.</td></tr>');
+
+                return;
+            }
+
+            $cuerpo.html(estados.map(function (e) {
+                return '<tr>' +
+                    '<td>' + e.id + '</td>' +
+                    '<td class="fw-semibold">' + App.esc(e.estado) + '</td>' +
+                    '<td>' + App.esc(e.descripcion || '—') + '</td>' +
+                    '</tr>';
+            }).join(''));
+        })
+        .fail(function (xhr) {
+            $cuerpo.html('<tr><td colspan="3" class="text-danger">No se pudieron cargar los estados.</td></tr>');
+            App.notificarError(xhr);
+        });
 });

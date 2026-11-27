@@ -63,7 +63,7 @@ class LoginController extends Controller
             'password' => $request->password,
         ];
 
-        if (Auth::attempt($credenciales)) {
+        if (Auth::attempt($credenciales, $request->boolean('remember'))) {
 
             $usuario = Auth::user();
 
@@ -111,6 +111,16 @@ class LoginController extends Controller
                 $usuario->id,
                 'Inicio de sesión exitoso.'
             );
+
+            // Usuario nuevo o con contraseña restablecida: debe cambiarla.
+            if ($usuario->debe_cambiar_password) {
+                return redirect()
+                    ->route('password.cambiar')
+                    ->with(
+                        'warning',
+                        'Por seguridad, debe cambiar su contraseña para continuar.'
+                    );
+            }
 
             return redirect()
                 ->intended('/')

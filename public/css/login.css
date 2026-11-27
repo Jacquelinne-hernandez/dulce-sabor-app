@@ -917,3 +917,20 @@ body {
         height: 38px;
     }
 }
+
+/* Aviso bajo "Recordarme" (la contraseña la restablece el administrador) */
+.dulce-login__nota {
+    max-width: 55%;
+    color: #7a5a8c;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.35;
+    text-align: right;
+}
+
+@media (max-width: 575.98px) {
+    .dulce-login__nota {
+        max-width: 100%;
+        text-align: left;
+    }
+}

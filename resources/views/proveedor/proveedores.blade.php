@@ -10,7 +10,9 @@
      data-url-insertar="{{ route('proveedores.insertar') }}"
      data-url-buscar="{{ route('proveedores.buscar', ['id' => '__ID__']) }}"
      data-url-actualizar="{{ route('proveedores.actualizar', ['id' => '__ID__']) }}"
-     data-url-eliminar="{{ route('proveedores.eliminar', ['id' => '__ID__']) }}">
+     data-url-eliminar="{{ route('proveedores.eliminar', ['id' => '__ID__']) }}"
+     data-productos="{{ $productos->map(fn ($p) => ['id' => $p->id, 'nombre' => $p->nombre])->values()->toJson() }}"
+     data-categorias="{{ $categorias->map(fn ($c) => ['id' => $c->id, 'nombre' => $c->nombre])->values()->toJson() }}">
 
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <div>
@@ -40,6 +42,7 @@
                         <th>Contacto</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
+                        <th>Productos</th>
                         <th>Dirección</th>
                         <th class="text-end">Acciones</th>
                     </tr>
@@ -83,6 +86,33 @@
                             <div class="col-12">
                                 <label for="proveedores-descripcion" class="form-label">Descripción</label>
                                 <textarea class="form-control" id="proveedores-descripcion" name="descripcion" rows="3" maxlength="250"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h3 class="h6 mb-0">Productos que ofrece</h3>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="agregar-producto-proveedor">
+                                        <i class="fa-solid fa-plus me-1"></i>Agregar producto
+                                    </button>
+                                </div>
+                                <div class="form-text mb-2">
+                                    Solo se listan productos de tipo <strong>comprado</strong>. Elija uno existente
+                                    o cree uno nuevo, con el precio al que este proveedor lo vende.
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Producto</th>
+                                                <th style="width:170px">Precio del proveedor ($)</th>
+                                                <th style="width:50px"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="proveedores-lineas"></tbody>
+                                    </table>
+                                </div>
+                                <div class="text-muted small mt-2" id="proveedores-sin-productos">
+                                    Este proveedor aún no tiene productos asignados.
+                                </div>
                             </div>
                         </div>
                     </form>

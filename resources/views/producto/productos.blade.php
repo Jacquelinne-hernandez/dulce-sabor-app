@@ -12,7 +12,8 @@
          data-url-insertar="{{ route('productos.insertar') }}"
          data-url-actualizar="{{ route('productos.actualizar', ['id' => '__ID__']) }}"
          data-url-eliminar="{{ route('productos.eliminar', ['id' => '__ID__']) }}"
-         data-url-reactivar="{{ route('productos.reactivar', ['id' => '__ID__']) }}">
+         data-url-reactivar="{{ route('productos.reactivar', ['id' => '__ID__']) }}"
+         data-url-imagen="{{ route('productos.imagen.subir', ['id' => '__ID__']) }}">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
             <div>
                 <h1 class="h3 mb-0"><i class="fa-solid fa-cake-candles me-2"></i>Productos</h1>
@@ -38,6 +39,7 @@
                     <tr>
                         <th>Producto</th>
                         <th>Categoría</th>
+                        <th>Origen</th>
                         <th>Precio</th>
                         <th>Stock</th>
                         <th>Estado</th>
@@ -90,15 +92,28 @@
                                     <label for="productos-stock_minimo" class="form-label">Stock mínimo <span class="text-danger">*</span></label>
                                     <input type="number" step="1" min="0" class="form-control" id="productos-stock_minimo" name="stock_minimo" required>
                                 </div>
+                                <div class="col-md-4">
+                                    <label for="productos-origen" class="form-label">Origen <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="productos-origen" name="origen" required>
+                                        <option value="produccion">Producción propia</option>
+                                        <option value="compra">Comprado a proveedor</option>
+                                    </select>
+                                </div>
                                 <div class="col-12">
                                     <label for="productos-descripcion" class="form-label">Descripción</label>
                                     <textarea class="form-control" id="productos-descripcion" name="descripcion" rows="2" maxlength="255"></textarea>
                                 </div>
                                 <div class="col-12">
                                     <label for="productos-imagen" class="form-label">Fotografía del producto (opcional)</label>
-                                    <input type="file" class="form-control" id="productos-imagen" name="imagen" accept="image/png,image/jpeg,image/webp">
+                                    <input type="file" class="form-control" id="productos-imagen" name="archivo_imagen" accept="image/png,image/jpeg,image/webp">
+                                    <div class="form-text">JPG, PNG o WEBP, máximo 2 MB. Se guarda en el servidor con un código que identifica al producto.</div>
                                     <div class="mt-2 d-none" id="productos-preview-contenedor">
                                         <img id="productos-preview" src="" alt="Vista previa" style="max-height: 140px; border-radius: 16px; border: 2px solid #f7c1d8;">
+                                        <div class="mt-2">
+                                            <button type="button" class="btn btn-sm btn-outline-danger d-none" id="productos-quitar-imagen">
+                                                <i class="fa-solid fa-trash me-1"></i>Quitar imagen
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

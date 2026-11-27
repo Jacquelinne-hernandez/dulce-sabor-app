@@ -63,6 +63,31 @@ class RolMiddleware
         }
 
         /*
+         * Cambio de contraseña obligatorio (usuario nuevo o con la contraseña
+         * restablecida por el administrador): mientras no la cambie, solo
+         * puede abrir la pantalla de cambio de contraseña.
+         */
+        if (
+            $usuario->debe_cambiar_password &&
+            !$request->routeIs('password.cambiar', 'password.actualizar')
+        ) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'mensaje' => 'Debe cambiar su contraseña para continuar.',
+                    'redirigir' => route('password.cambiar'),
+                ], 423);
+            }
+
+            return redirect()
+                ->route('password.cambiar')
+                ->with(
+                    'warning',
+                    'Por seguridad, debe cambiar su contraseña para continuar.'
+                );
+        }
+
+        /*
          * Si la ruta no especifica roles, cualquier usuario
          * autenticado y activo puede continuar.
          */

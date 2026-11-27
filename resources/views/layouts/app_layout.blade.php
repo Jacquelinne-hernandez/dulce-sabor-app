@@ -60,6 +60,11 @@
                     <li class="app-dropdown__correo">{{ $usuarioActual->email }}</li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
+                        <a class="dropdown-item" href="{{ route('password.cambiar') }}">
+                            <i class="fa-solid fa-key me-2"></i>Cambiar contraseña
+                        </a>
+                    </li>
+                    <li>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="dropdown-item">

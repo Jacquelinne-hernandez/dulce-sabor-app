@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AnularFacturaRequest;
 use App\Http\Requests\InsertarFacturaRequest;
+use App\Mail\FacturaEmitidaMail;
 use App\Models\Bitacora;
+use App\Support\Correo;
 use App\Models\Factura;
 use App\Models\Pedido;
 use Illuminate\Http\Request;
@@ -114,6 +116,11 @@ class FacturaController extends Controller
                 : ''),
             Auth::user()?->nombre
         );
+
+        // Aviso al cliente si tiene un correo asociado (no interrumpe si falla).
+        if ($factura->cliente && $factura->cliente->correo) {
+            Correo::enviar($factura->cliente->correo, new FacturaEmitidaMail($factura));
+        }
 
         return response()->json([
             'success' => true,

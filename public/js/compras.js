@@ -148,10 +148,28 @@ $(function () {
     /* ------------------------------------------------------------------
      * Registrar compra
      * ------------------------------------------------------------------ */
+    // Solo los productos que ofrece el proveedor elegido, con su precio.
+    function productosDelProveedor() {
+        const id = String($('#compras-id_proveedor').val() || '');
+        const proveedor = proveedores.filter(function (p) { return String(p.id) === id; })[0];
+
+        return proveedor ? (proveedor.productos || []) : [];
+    }
+
     function opcionesProductos() {
-        return '<option value="">Seleccione...</option>' + productos.map(function (p) {
-            return '<option value="' + p.id + '" data-costo="' + (p.costo || 0) + '">' + App.esc(p.nombre) +
-                ' (stock ' + p.stock + ', costo ' + dinero(p.costo || 0) + ')</option>';
+        if (!$('#compras-id_proveedor').val()) {
+            return '<option value="">Seleccione primero un proveedor</option>';
+        }
+
+        const lista = productosDelProveedor();
+
+        if (!lista.length) {
+            return '<option value="">Este proveedor no tiene productos asignados</option>';
+        }
+
+        return '<option value="">Seleccione...</option>' + lista.map(function (p) {
+            return '<option value="' + p.id + '" data-precio="' + (p.precio_compra || 0) + '">' + App.esc(p.nombre) +
+                ' (' + dinero(p.precio_compra || 0) + ', stock ' + p.stock + ')</option>';
         }).join('');
     }
 
@@ -227,14 +245,34 @@ $(function () {
     $('#form-compras').on('change', 'input[name="condicion_pago"]', ajustarCondicion);
     $('#compras-abono').on('input', recalcular);
 
+    // Al cambiar de proveedor, cada línea muestra solo los productos de ese
+    // proveedor; la selección se conserva únicamente si también los ofrece.
+    $('#compras-id_proveedor').on('change', function () {
+        $lineas.find('[data-linea]').each(function () {
+            const $s = $(this).find('[data-campo="id_producto"]');
+            const anterior = $s.val();
+
+            $s.html(opcionesProductos());
+
+            if (anterior && $s.find('option[value="' + anterior + '"]').length) {
+                $s.val(anterior);
+            } else {
+                $(this).find('[data-campo="precio_unitario"]').val('').removeData('sugerido');
+            }
+        });
+
+        recalcular();
+    });
+
     $lineas.on('change', '[data-campo="id_producto"]', function () {
         const $l = $(this).closest('[data-linea]');
-        const costo = $(this).find(':selected').data('costo');
+        const precio = $(this).find(':selected').data('precio');
         const $precio = $l.find('[data-campo="precio_unitario"]');
 
-        // Sugiere el costo actual para que el usuario solo lo ajuste.
-        if (costo && !$precio.val()) {
-            $precio.val(Number(costo).toFixed(2));
+        // Sugiere el precio que ofrece el proveedor; solo lo reemplaza si el
+        // usuario no lo había modificado a mano.
+        if (precio && (!$precio.val() || $precio.val() === String($precio.data('sugerido') || ''))) {
+            $precio.val(Number(precio).toFixed(2)).data('sugerido', Number(precio).toFixed(2));
         }
 
         recalcular();

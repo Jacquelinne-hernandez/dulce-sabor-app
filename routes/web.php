@@ -15,6 +15,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MesaController;
 use App\Http\Controllers\OrdenController;
 use App\Http\Controllers\PagoController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
@@ -45,6 +46,13 @@ Route::middleware(['auth', 'rol'])->group(function () {
 
     // Cada rol ve su propio dashboard (el administrador admite ?desde=&hasta=).
     Route::get('home/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+
+    // Cambio de la propia contraseña. Es lo único que puede abrir un usuario
+    // con cambio obligatorio pendiente (ver RolMiddleware).
+    Route::get('cuenta/password', [PasswordController::class, 'formulario'])->name('password.cambiar');
+    Route::put('cuenta/password', [PasswordController::class, 'actualizar'])
+        ->middleware('throttle:6,1')
+        ->name('password.actualizar');
 });
 
 /*
@@ -67,6 +75,11 @@ Route::middleware(['auth', 'rol:Administrador,Operador'])->group(function () {
     // Catálogo de productos (solo lectura: existencias y precio, sin costo)
     Route::get('productos/catalogo', [ProductoController::class, 'catalogo'])->name('productos.catalogo');
     Route::get('productos/catalogo/todos', [ProductoController::class, 'catalogoTodos'])->name('productos.catalogo.todos');
+
+    // Imagen de un producto (se entrega desde storage/app/files)
+    Route::get('productos/imagen/{id}', [ProductoController::class, 'imagen'])
+        ->whereNumber('id')
+        ->name('productos.imagen');
 
     // Mesas (consulta y cambio de estado)
     Route::get('mesas', [MesaController::class, 'index'])->name('mesas');
@@ -147,21 +160,14 @@ Route::middleware(['auth', 'rol:Administrador'])->group(function () {
     // Bitácora
     Route::get('bitacora', [BitacoraController::class, 'index'])->name('bitacora');
 
-    // Roles
+    // Roles y estados: fijos (los crean RolSeeder y EstadoSeeder), solo consulta.
     Route::get('roles', [RolController::class, 'index'])->name('roles');
     Route::get('roles/todos', [RolController::class, 'mostrarTodos'])->name('roles.todos');
-    Route::post('roles/insertar', [RolController::class, 'insertarRol'])->name('roles.insertar');
     Route::get('roles/buscar/{id}', [RolController::class, 'buscarRol'])->name('roles.buscar');
-    Route::put('roles/actualizar/{id}', [RolController::class, 'actualizarRol'])->name('roles.actualizar');
-    Route::delete('roles/eliminar/{id}', [RolController::class, 'eliminarRol'])->name('roles.eliminar');
 
-    // Estados
     Route::get('estados', [EstadoController::class, 'index'])->name('estados');
     Route::get('estados/todos', [EstadoController::class, 'mostrarTodos'])->name('estados.todos');
-    Route::post('estados/insertar', [EstadoController::class, 'insertarEstado'])->name('estados.insertar');
     Route::get('estados/buscar/{id}', [EstadoController::class, 'buscarEstado'])->name('estados.buscar');
-    Route::put('estados/actualizar/{id}', [EstadoController::class, 'actualizarEstado'])->name('estados.actualizar');
-    Route::delete('estados/eliminar/{id}', [EstadoController::class, 'eliminarEstado'])->name('estados.eliminar');
 
     // Usuarios
     Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios');
@@ -195,6 +201,12 @@ Route::middleware(['auth', 'rol:Administrador'])->group(function () {
     Route::put('productos/actualizar/{id}', [ProductoController::class, 'actualizarProducto'])->name('productos.actualizar');
     Route::delete('productos/eliminar/{id}', [ProductoController::class, 'eliminarProducto'])->name('productos.eliminar');
     Route::patch('productos/reactivar/{id}', [ProductoController::class, 'reactivarProducto'])->name('productos.reactivar');
+    Route::post('productos/{id}/imagen', [ProductoController::class, 'subirImagen'])
+        ->whereNumber('id')
+        ->name('productos.imagen.subir');
+    Route::delete('productos/{id}/imagen', [ProductoController::class, 'quitarImagen'])
+        ->whereNumber('id')
+        ->name('productos.imagen.quitar');
 
     // Compras, deudas con proveedores y abonos
     Route::get('compras', [CompraController::class, 'index'])->name('compras');

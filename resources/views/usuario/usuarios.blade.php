@@ -99,7 +99,7 @@
                             <div class="col-md-6">
                                 <label for="usuarios-password" class="form-label">Contraseña</label>
                                 <input type="password" class="form-control" id="usuarios-password" name="password" minlength="8" maxlength="255" autocomplete="new-password">
-                                <div class="form-text"><span data-ayuda-password class="d-none">Deje en blanco para conservar la contraseña actual. </span>Mínimo 8 caracteres.</div>
+                                <div class="form-text"><span data-ayuda-password class="d-none">Deje en blanco para conservar la contraseña actual. </span>Mínimo 8 caracteres, con mayúscula, minúscula, número y un carácter especial (! @ # $ % &amp; *). El usuario deberá cambiarla en su primer ingreso.</div>
                             </div>
                             <div class="col-md-6">
                                 <label for="usuarios-password_confirmation" class="form-label">Confirmar contraseña</label>

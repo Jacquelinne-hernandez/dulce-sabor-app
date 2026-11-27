@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             CorrelativoSeeder::class,
             ProveedorSeeder::class,
             ProductoSeeder::class,
+            ProveedorProductoSeeder::class,
             ClienteSeeder::class,
         ]);
     }
