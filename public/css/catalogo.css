@@ -78,3 +78,25 @@
 @media (max-width: 575.98px) {
     .cat-grid { grid-template-columns: 1fr; }
 }
+
+/* Foto del producto (Fase 6B): ocupa el ancho de la tarjeta, sobre el nombre. */
+.cat-tarjeta__foto {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 170px;
+    margin: -1.2rem -1.3rem .9rem;
+    overflow: hidden;
+    background: radial-gradient(circle at 30% 25%, #fff 0%, #ffd9e8 85%);
+    border-radius: calc(var(--radio-lg) - 2px) calc(var(--radio-lg) - 2px) 0 0;
+}
+.cat-tarjeta__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cat-tarjeta__foto .badge { position: absolute; top: .7rem; right: .7rem; box-shadow: 0 4px 10px rgba(0, 0, 0, .15); }
+.cat-tarjeta__foto-icono { font-size: 2.4rem; color: #d6336c; }
+
+#catalogo-paginacion {
+    margin-top: 1.2rem;
+    border: 1.5px solid #fff;
+    border-radius: var(--radio-lg);
+    box-shadow: var(--sombra-suave);
+}

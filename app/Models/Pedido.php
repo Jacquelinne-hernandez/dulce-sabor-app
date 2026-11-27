@@ -336,8 +336,8 @@ class Pedido extends Model
     }
 
     // La mesa debe poder usarse para consumo en el local (sin hora de
-    // término): se permite una mesa ocupada solo si lo está por otro pedido
-    // local abierto (el cliente pidió algo más).
+    // término). Solo se aceptan mesas disponibles: una mesa ocupada,
+    // reservada o en mantenimiento no admite pedidos nuevos.
     private static function validarMesaParaConsumo(Mesa $mesa): void
     {
         if ($mesa->estado === 'mantenimiento') {
@@ -353,16 +353,11 @@ class Pedido extends Model
         }
 
         if ($mesa->estado === 'ocupada') {
-            $conPedidoLocal = self::where('id_mesa', $mesa->id)
-                ->where('tipo', 'local')
-                ->where('estado', 'abierto')
-                ->exists();
-
-            if (!$conPedidoLocal) {
-                throw ValidationException::withMessages([
-                    'id_mesa' => ["La mesa {$mesa->numero} se encuentra ocupada."],
-                ]);
-            }
+            throw ValidationException::withMessages([
+                'id_mesa' => [
+                    "La mesa {$mesa->numero} se encuentra ocupada. Elija otra mesa o espere a que se libere.",
+                ],
+            ]);
         }
 
         // No sentar clientes en una mesa que está por reservarse (o ya

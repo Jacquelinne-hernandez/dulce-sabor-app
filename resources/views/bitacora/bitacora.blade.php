@@ -68,17 +68,17 @@
             <div class="card-header bg-white">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-5 col-lg-4">
-                        <input type="search" class="form-control" placeholder="Buscar en los resultados..."
+                        <input type="search" class="form-control" placeholder="Buscar en esta página..."
                                data-filtro="#tabla-bitacora" aria-label="Buscar">
                     </div>
                     <div class="col-md-7 col-lg-8 text-md-end text-muted small">
-                        {{ $bitacoras->count() }} registro(s)
+                        {{ number_format($bitacoras->total()) }} registro(s)
                     </div>
                 </div>
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover table-sm align-middle mb-0" id="tabla-bitacora">
+                <table class="table table-hover table-sm align-middle mb-0" id="tabla-bitacora" data-sin-paginar>
                     <thead class="table-light">
                     <tr>
                         <th>Fecha</th>
@@ -113,6 +113,15 @@
                     </tbody>
                 </table>
             </div>
+
+            @if($bitacoras->hasPages())
+                <div class="card-footer bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <span class="small text-muted">
+                        Mostrando {{ $bitacoras->firstItem() }}–{{ $bitacoras->lastItem() }} de {{ number_format($bitacoras->total()) }}
+                    </span>
+                    {{ $bitacoras->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
         </div>
 
     </div>

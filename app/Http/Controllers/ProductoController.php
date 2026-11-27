@@ -259,11 +259,35 @@ class ProductoController extends Controller
         return view('producto.catalogo');
     }
 
-    public function catalogoTodos()
+    // Una página del catálogo. Parámetros opcionales: q (texto),
+    // disponibilidad (disponible|bajo|agotado|vendible), pagina y por_pagina.
+    public function catalogoTodos(Request $request)
     {
+        $filtros = $request->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+            'disponibilidad' => ['nullable', 'string', 'in:disponible,bajo,agotado,vendible'],
+            'pagina' => ['nullable', 'integer', 'min:1'],
+            'por_pagina' => ['nullable', 'integer', 'min:1', 'max:' . Producto::CATALOGO_POR_PAGINA_MAX],
+        ], [
+            'q.max' => 'La búsqueda no debe superar los 100 caracteres.',
+            'disponibilidad.in' => 'El filtro de existencias no es válido.',
+            'pagina.integer' => 'La página solicitada no es válida.',
+            'por_pagina.max' => 'No se pueden pedir tantos productos por página.',
+        ]);
+
+        $pagina = Producto::paginarCatalogo($filtros);
+
         return response()->json([
             'success' => true,
-            'productos' => Producto::mostrarCatalogo(),
+            'productos' => $pagina->items(),
+            'paginacion' => [
+                'pagina' => $pagina->currentPage(),
+                'por_pagina' => $pagina->perPage(),
+                'total' => $pagina->total(),
+                'ultima' => $pagina->lastPage(),
+                'desde' => $pagina->firstItem() ?? 0,
+                'hasta' => $pagina->lastItem() ?? 0,
+            ],
         ]);
     }
 }

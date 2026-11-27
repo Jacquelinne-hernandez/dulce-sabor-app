@@ -79,6 +79,34 @@ class Bitacora extends Model
 
         return $consulta->get();
     }
+
+    // Misma consulta que mostrarTodos, pero por páginas (la bitácora crece
+    // con cada acción del sistema). Conserva los filtros en los enlaces.
+    public static function paginar(
+        ?string $evento = null,
+        ?string $fechaDesde = null,
+        ?string $fechaHasta = null,
+        int $porPagina = 25
+    ): \Illuminate\Pagination\LengthAwarePaginator {
+        $consulta = static::with('usuario')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
+
+        if ($evento) {
+            $consulta->where('evento', $evento);
+        }
+
+        if ($fechaDesde) {
+            $consulta->whereDate('created_at', '>=', $fechaDesde);
+        }
+
+        if ($fechaHasta) {
+            $consulta->whereDate('created_at', '<=', $fechaHasta);
+        }
+
+        return $consulta->paginate($porPagina)->withQueryString();
+    }
+
     public static function registrar(
         string $evento,
         ?string $modulo = null,

@@ -314,6 +314,73 @@ class Producto extends Model
             ->get();
     }
 
+    // Catálogo paginado (búsqueda y filtro de existencias incluidos). Lo usan
+    // el catálogo y la vitrina del formulario de pedidos, así el navegador
+    // solo recibe una página aunque el inventario crezca.
+    public const CATALOGO_POR_PAGINA = 12;
+    public const CATALOGO_POR_PAGINA_MAX = 60;
+
+    public static function paginarCatalogo(array $filtros = [])
+    {
+        $porPagina = (int) ($filtros['por_pagina'] ?? self::CATALOGO_POR_PAGINA);
+        $porPagina = max(1, min($porPagina, self::CATALOGO_POR_PAGINA_MAX));
+        $pagina = max(1, (int) ($filtros['pagina'] ?? 1));
+        $texto = trim((string) ($filtros['q'] ?? ''));
+
+        $consulta = self::select([
+            'id',
+            'id_categoria',
+            'nombre',
+            'precio',
+            'stock',
+            'stock_minimo',
+            'descripcion',
+            'imagen',
+            'estado',
+            'origen',
+        ])
+            ->with('categoria')
+            ->where('estado', '!=', 'inactivo')
+            ->orderBy('nombre')
+            ->orderBy('id');
+
+        if ($texto !== '') {
+            $patron = '%' . addcslashes($texto, '\\%_') . '%';
+
+            $consulta->where(function ($q) use ($patron) {
+                $q->where('nombre', 'like', $patron)
+                    ->orWhereHas('categoria', fn ($c) => $c->where('nombre', 'like', $patron));
+            });
+        }
+
+        switch ($filtros['disponibilidad'] ?? null) {
+            // Lo que se puede vender ahora mismo.
+            case 'vendible':
+                $consulta->where('estado', 'disponible')->where('stock', '>', 0);
+                break;
+
+            case 'disponible':
+                $consulta->where('estado', '!=', 'agotado')
+                    ->where('stock', '>', 0)
+                    ->whereColumn('stock', '>', 'stock_minimo');
+                break;
+
+            case 'bajo':
+                $consulta->where('estado', '!=', 'agotado')
+                    ->where('stock', '>', 0)
+                    ->whereColumn('stock', '<=', 'stock_minimo');
+                break;
+
+            case 'agotado':
+                $consulta->where(function ($q) {
+                    $q->where('estado', 'agotado')->orWhere('stock', '<=', 0);
+                });
+                break;
+        }
+
+        return $consulta->paginate($porPagina, ['*'], 'page', $pagina);
+    }
+
     public static function buscarProductoXId($id)
     {
         return self::with('categoria')->find($id);

@@ -128,7 +128,7 @@
                                                 <select class="form-select" id="pedidos-mesa" name="id_mesa">
                                                     <option value="">Seleccione...</option>
                                                 </select>
-                                                <div class="form-text">Una mesa ocupada solo se puede elegir si tiene un pedido abierto del local.</div>
+                                                <div class="form-text">Las mesas ocupadas, reservadas o en mantenimiento no se pueden elegir.</div>
                                             </div>
 
                                             {{-- Reserva --}}

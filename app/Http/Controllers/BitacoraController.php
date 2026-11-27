@@ -10,7 +10,7 @@ class BitacoraController extends Controller
     public function index(Request $request): View
     {
         $datos = [
-            'bitacoras' => Bitacora::mostrarTodos(
+            'bitacoras' => Bitacora::paginar(
                 $request->input('evento'),
                 $request->input('fecha_desde'),
                 $request->input('fecha_hasta')

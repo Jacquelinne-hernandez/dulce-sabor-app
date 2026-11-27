@@ -33,7 +33,14 @@ $(function () {
     const ANTICIPACION = Number($raiz.data('minutosAnticipacion')) || 30;
 
     let pedidos = [];
-    let catalogo = [];
+    let catalogo = [];                      // productos de la página que se muestra
+    let catalogoPagina = 1;
+    let catalogoUltima = 1;
+    let catalogoTotal = 0;
+    let catalogoSecuencia = 0;
+    let catalogoPeticion = null;
+    let catalogoTemporizador = null;
+    const CATALOGO_POR_PAGINA = 9;
     let reservasHoy = [];
     let carrito = {};          // id_producto -> { producto, cantidad }
     let idCancelando = null;
@@ -196,7 +203,7 @@ $(function () {
     function cargarMesas() {
         return App.peticion('GET', url.mesas).done(function (r) {
             const opciones = (r.mesas || []).map(function (m) {
-                const bloqueada = m.estado === 'mantenimiento' || m.estado === 'reservada';
+                const bloqueada = m.estado === 'mantenimiento' || m.estado === 'reservada' || m.estado === 'ocupada';
 
                 return '<option value="' + m.id + '"' + (bloqueada ? ' disabled' : '') + '>Mesa ' + m.numero +
                     ' · ' + m.capacidad + ' personas · ' + App.textoEstado(m.estado) + '</option>';
@@ -230,23 +237,62 @@ $(function () {
         }).fail(App.notificarError);
     }
 
+    // La vitrina pide al servidor una página a la vez (búsqueda incluida),
+    // así sigue ágil aunque el catálogo tenga cientos de productos.
+    const $pieCatalogo = $(
+        '<div class="mt-2" id="pedidos-catalogo-pie"><div class="d-flex align-items-center justify-content-between gap-2">' +
+            '<span class="texto-pequeno" data-info></span>' +
+            '<div class="btn-group btn-group-sm" role="group" aria-label="Páginas de la vitrina">' +
+                '<button type="button" class="btn btn-outline-secondary" data-pag="-1" aria-label="Página anterior"><i class="fa-solid fa-chevron-left"></i></button>' +
+                '<button type="button" class="btn btn-outline-secondary" data-pag="1" aria-label="Página siguiente"><i class="fa-solid fa-chevron-right"></i></button>' +
+            '</div>' +
+        '</div></div>'
+    ).hide();
+
+    $('#pedidos-catalogo').after($pieCatalogo);
+
     function cargarCatalogo() {
-        return App.peticion('GET', url.catalogo).done(function (r) {
-            catalogo = (r.productos || []).filter(function (p) {
-                return p.estado === 'disponible' && p.stock > 0;
-            });
+        const mia = ++catalogoSecuencia;
+
+        if (catalogoPeticion) {
+            catalogoPeticion.abort();
+        }
+
+        catalogoPeticion = App.peticion('GET', url.catalogo, {
+            q: $('#pedidos-buscar-producto').val().trim(),
+            disponibilidad: 'vendible',
+            pagina: catalogoPagina,
+            por_pagina: CATALOGO_POR_PAGINA
+        }).done(function (r) {
+            if (mia !== catalogoSecuencia) {
+                return;
+            }
+
+            const pag = r.paginacion || {};
+
+            // La página pedida ya no existe (por ejemplo, tras buscar): se va a la última.
+            if (pag.ultima > 0 && catalogoPagina > pag.ultima) {
+                catalogoPagina = pag.ultima;
+                cargarCatalogo();
+
+                return;
+            }
+
+            catalogo = r.productos || [];
+            catalogoUltima = pag.ultima || 1;
+            catalogoTotal = pag.total || 0;
             pintarCatalogo();
-        }).fail(App.notificarError);
+        }).fail(function (xhr, texto) {
+            if (texto !== 'abort') {
+                App.notificarError(xhr);
+            }
+        });
+
+        return catalogoPeticion;
     }
 
     function pintarCatalogo() {
-        const texto = $('#pedidos-buscar-producto').val().trim().toLowerCase();
-        const lista = catalogo.filter(function (p) {
-            return !texto || p.nombre.toLowerCase().indexOf(texto) !== -1 ||
-                (p.categoria && p.categoria.nombre.toLowerCase().indexOf(texto) !== -1);
-        });
-
-        $('#pedidos-catalogo').html(lista.length ? lista.map(function (p) {
+        $('#pedidos-catalogo').html(catalogo.length ? catalogo.map(function (p) {
             const enCarrito = carrito[p.id] ? carrito[p.id].cantidad : 0;
 
             return '<button type="button" class="pedido-prod" data-agregar="' + p.id + '"' +
@@ -254,7 +300,23 @@ $(function () {
                 '<span class="pedido-prod__nombre">' + App.esc(p.nombre) + '</span>' +
                 '<span class="pedido-prod__meta">' + App.dinero(p.precio) + ' · quedan ' + (p.stock - enCarrito) + '</span></button>';
         }).join('') : '<div class="texto-pequeno p-2">No hay productos disponibles.</div>');
+
+        const hayPaginas = catalogoUltima > 1;
+
+        $pieCatalogo.toggle(hayPaginas);
+        $pieCatalogo.find('[data-info]').text('Página ' + catalogoPagina + ' de ' + catalogoUltima + ' · ' + catalogoTotal + ' productos');
+        $pieCatalogo.find('[data-pag="-1"]').prop('disabled', catalogoPagina <= 1);
+        $pieCatalogo.find('[data-pag="1"]').prop('disabled', catalogoPagina >= catalogoUltima);
     }
+
+    $pieCatalogo.on('click', '[data-pag]', function () {
+        const destino = catalogoPagina + Number($(this).data('pag'));
+
+        if (destino >= 1 && destino <= catalogoUltima) {
+            catalogoPagina = destino;
+            cargarCatalogo();
+        }
+    });
 
     function pintarCarrito() {
         const ids = Object.keys(carrito);
@@ -366,7 +428,13 @@ $(function () {
         refrescarCarrito();
     });
 
-    $('#pedidos-buscar-producto').on('input', pintarCatalogo);
+    $('#pedidos-buscar-producto').on('input', function () {
+        clearTimeout(catalogoTemporizador);
+        catalogoTemporizador = setTimeout(function () {
+            catalogoPagina = 1;
+            cargarCatalogo();
+        }, 300);
+    });
     $form.on('change', 'input[name="tipo"]', ajustarTipo);
     $('#pedidos-programar').on('change', actualizarProgramado);
     $('#pedidos-reserva').on('change', totales);
@@ -377,6 +445,7 @@ $(function () {
         selector.limpiar();
         carrito = {};
         $('#pedidos-buscar-producto').val('');
+        catalogoPagina = 1; // vuelve a la primera página de la vitrina
         $('#pedidos-fecha-programada').attr('min', fechaHoraInput(new Date(Date.now() + ANTICIPACION * 60000)));
         ajustarTipo();
         refrescarCarrito();

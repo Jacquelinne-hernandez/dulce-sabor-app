@@ -22,11 +22,7 @@ class PedidoController extends Controller
             ->orderBy('numero')
             ->get();
 
-        $productos = Producto::mostrarCatalogo()
-            ->filter(fn ($p) => $p->estado === 'disponible' && $p->stock > 0)
-            ->values();
-
-        return view('pedido.pedidos', compact('mesas', 'productos'));
+        return view('pedido.pedidos', compact('mesas'));
     }
 
     public function mostrarTodos()
