@@ -34,7 +34,7 @@
             </button>
             <a class="navbar-brand app-brand" href="{{ route('home') }}">
                 <img class="app-brand__logo"
-                     src="{{ asset('images/logo_dulceSabor.svg') }}"
+                     src="{{ asset('images/logo.svg') }}"
                      onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22 fill=%22none%22 stroke=%22%23ffffff%22 stroke-width=%223%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M14 34c-6-5-1-13 8-12 1-10 14-11 19-3 10-7 23 2 19 12 9 5 4 16-5 17H23c-9-1-13-6-9-14z%22/%3E%3Cpath d=%22M21 48l6 11h16l6-11M28 50l2 8M35 50v8M42 50l-2 8%22/%3E%3Ccircle cx=%2236%22 cy=%2213%22 r=%223%22 fill=%22%23ffffff%22/%3E%3C/svg%3E';"
                      alt="Dulce Sabor Sys">
                 <span class="app-brand__texto">Dulce Sabor Sys</span>

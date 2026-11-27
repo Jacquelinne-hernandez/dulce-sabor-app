@@ -35,8 +35,17 @@ $(function () {
                 acciones = App.botonesCrud(p.id, { tituloEliminar: 'Inactivar', iconoEliminar: 'fa-ban' });
             }
 
+            const rutaImg = p.imagen_url || (p.imagen
+                ? (p.imagen.startsWith('http') || p.imagen.startsWith('/') ? p.imagen : '/storage/' + p.imagen)
+                : null);
+
+            const thumbHtml = rutaImg
+                ? '<div class="prod-thumb-wrapper"><img src="' + App.esc(rutaImg) + '" alt="' + App.esc(p.nombre) + '" ' +
+                'onerror="this.outerHTML=\'<i class=\\\'fa-solid fa-cake-candles\\\'></i>\'"></div>'
+                : '<div class="prod-thumb-wrapper"><i class="fa-solid fa-cake-candles"></i></div>';
+
             return '<tr>' +
-                '<td class="fw-semibold">' + App.esc(p.nombre) + '</td>' +
+                '<td class="fw-semibold"><div class="d-flex align-items-center gap-3">' + thumbHtml + '<span>' + App.esc(p.nombre) + '</span></div></td>' +
                 '<td>' + App.esc(p.categoria ? p.categoria.nombre : '—') + '</td>' +
                 '<td><span>' + App.dinero(p.precio) +
                 (p.costo !== undefined && p.costo !== null

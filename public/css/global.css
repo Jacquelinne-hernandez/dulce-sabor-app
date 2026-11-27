@@ -1,12 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
 /* ==========================================
    DULCE SABOR SYS - ESTILOS GLOBALES
    Requiere theme.css (variables).
    ========================================== */
+:root {
+    --font-principal: 'DM Sans', sans-serif;
+    --font-elegante: 'Playfair Display', serif;
+    --font-decorativa: 'Great Vibes', cursive;
+}
+
 body.app-body {
-    font-family: var(--font-principal);
+    font-family: var(--font-principal) !important;
     color: var(--lila-oscuro);
-    background: var(--degradado-fondo);
-    background-attachment: fixed;
+    background: var(--degradado-fondo, linear-gradient(135deg, #fffaff 0%, #f6e7fc 55%, #edd2f7 100%)) !important;
+    background-attachment: fixed !important;
     min-height: 100vh;
 }
 
@@ -31,12 +39,13 @@ h1, h2, h3, h4, h5, h6 { color: var(--lila-oscuro); }
 .btn-primary {
     position: relative;
     overflow: hidden;
-    background: var(--degradado-boton);
-    border: 2px solid rgba(255, 255, 255, .85);
-    color: #fff;
+    background: var(--degradado-boton, linear-gradient(110deg, #c16ed4, #a33cbb, #8429a3)) !important;
+    border: 2px solid rgba(255, 255, 255, .85) !important;
+    border-radius: 50px !important;
+    color: #fff !important;
     box-shadow:
         0 10px 22px rgba(133, 45, 165, .28),
-        inset 0 2px 5px rgba(255, 255, 255, .35);
+        inset 0 2px 5px rgba(255, 255, 255, .35) !important;
     transition: all .3s ease;
 }
 
@@ -65,7 +74,7 @@ h1, h2, h3, h4, h5, h6 { color: var(--lila-oscuro); }
     transform: translateY(-3px);
     box-shadow:
         0 14px 28px rgba(126, 45, 160, .36),
-        inset 0 2px 5px rgba(255, 255, 255, .4);
+        inset 0 2px 5px rgba(255, 255, 255, .4) !important;
 }
 
 .btn-primary:hover::before {
@@ -153,20 +162,20 @@ input[type="search"].form-control {
    ========================================== */
 [id^="modulo-"] > .d-flex:first-child,
 .pagina-hero {
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
     margin-bottom: 1.25rem !important;
-    padding: 1.5rem 1.8rem 1.5rem 6.5rem;
-    min-height: 112px;
-    background: var(--degradado-tarjeta-titulo);
-    border: 1px solid rgba(255, 255, 255, .9);
-    border-radius: var(--radio-xl);
-    box-shadow: var(--sombra-suave), inset 0 1px 0 rgba(255, 255, 255, .85);
+    padding: 1.5rem 1.8rem 1.5rem 6.5rem !important;
+    min-height: 112px !important;
+    background: var(--mod-hero, var(--degradado-tarjeta-titulo, linear-gradient(120deg, #ffffff 0%, #f4e6fc 55%, #ebdbfb 100%))) !important;
+    border: 1.5px solid rgba(255, 255, 255, .95) !important;
+    border-radius: var(--radio-xl, 28px) !important;
+    box-shadow: var(--sombra-suave, 0 10px 26px rgba(133, 45, 165, .09)), inset 0 1px 0 rgba(255, 255, 255, .85) !important;
 }
 
 [id^="modulo-"] > .d-flex:first-child::after,
@@ -201,42 +210,43 @@ input[type="search"].form-control {
 
 [id^="modulo-"] > .d-flex:first-child h1,
 .pagina-hero h1 {
-    position: static;
-    font-family: var(--font-elegante);
-    font-weight: 700;
-    font-size: 2rem;
-    line-height: 1.15;
-    color: var(--lila-oscuro);
+    position: static !important;
+    font-family: var(--font-elegante, 'Playfair Display', serif) !important;
+    font-weight: 700 !important;
+    font-size: 2rem !important;
+    line-height: 1.15 !important;
+    color: var(--lila-oscuro, #50216e) !important;
     margin: 0 !important;
 }
 
 [id^="modulo-"] > .d-flex:first-child h1 > i,
 .pagina-hero h1 > i {
-    position: absolute;
-    left: 1.65rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 64px;
-    height: 64px;
-    display: grid;
-    place-items: center;
+    position: absolute !important;
+    left: 1.65rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 64px !important;
+    height: 64px !important;
+    display: grid !important;
+    place-items: center !important;
     margin: 0 !important;
-    font-size: 1.45rem;
-    color: var(--mod-fg, var(--lila-boton));
-    background: radial-gradient(circle at 30% 25%, #fff 0%, var(--mod-bg, var(--lila-suave)) 78%);
-    border: 2.5px solid #fff;
-    border-radius: 50%;
-    box-shadow: 0 8px 18px rgba(143, 73, 168, .18);
-    z-index: 2;
+    font-size: 1.45rem !important;
+    color: var(--mod-fg, var(--lila-boton, #6366f1)) !important;
+    background: radial-gradient(circle at 30% 25%, #fff 0%, var(--mod-bg, var(--lila-suave, #e0e7ff)) 78%) !important;
+    border: 2.5px solid #fff !important;
+    border-radius: 50% !important;
+    box-shadow: 0 8px 18px rgba(143, 73, 168, .18) !important;
+    z-index: 2 !important;
 }
 
 [id^="modulo-"] > .d-flex:first-child p,
 .pagina-hero p {
-    position: relative;
-    z-index: 1;
-    color: var(--lila-texto) !important;
+    position: relative !important;
+    z-index: 1 !important;
+    font-family: var(--font-principal, 'DM Sans', sans-serif) !important;
+    color: var(--lila-texto, #77518c) !important;
     margin: .25rem 0 0 !important;
-    font-size: .96rem;
+    font-size: .96rem !important;
 }
 
 /* ==========================================
@@ -333,11 +343,11 @@ input[type="search"].form-control {
 .table td .btn-outline-secondary, .table td .btn-secondary { background: #f1e3fa !important; color: #a94bc1 !important; }
 .table td .btn-outline-danger, .table td .btn-danger { background: #ffdfe8 !important; color: #e5476f !important; }
 .table td .btn-outline-success, .table td .btn-success { background: #d6f5e6 !important; color: #1f9d63 !important; }
-.table td .btn-outline-warning, .table td .btn-warning { background: #fdecc0 !important; color: #b7791f !important; }
+.table td .btn-outline-warning, .table td .btn-warning { background: #fce8f0 !important; color: #d6336c !important; }
 .table td .btn-outline-info, .table td .btn-info { background: #d8f0fb !important; color: #2b84b3 !important; }
 .table td .btn-outline-dark, .table td .btn-dark { background: #e6dcee !important; color: #50216e !important; }
 
-/* ---------- Insignias de estado ---------- */
+/* ---------- Insignias de estado (sin amarillo vainilla) ---------- */
 .badge {
     font-family: var(--font-principal);
     font-weight: 600;
@@ -349,7 +359,7 @@ input[type="search"].form-control {
 .badge.bg-success, .badge.text-bg-success { background: var(--tono-success-bg) !important; color: var(--tono-success-fg) !important; }
 .badge.bg-primary, .badge.text-bg-primary { background: var(--tono-info-bg) !important; color: var(--tono-info-fg) !important; }
 .badge.bg-info, .badge.text-bg-info       { background: var(--tono-info-bg) !important; color: var(--tono-info-fg) !important; }
-.badge.bg-warning, .badge.text-bg-warning { background: var(--tono-warning-bg) !important; color: var(--tono-warning-fg) !important; }
+.badge.bg-warning, .badge.text-bg-warning { background: #fce8f0 !important; color: #d6336c !important; }
 .badge.bg-danger, .badge.text-bg-danger   { background: var(--tono-danger-bg) !important; color: var(--tono-danger-fg) !important; }
 .badge.bg-secondary, .badge.text-bg-secondary { background: var(--tono-secondary-bg) !important; color: var(--tono-secondary-fg) !important; }
 .badge.bg-dark, .badge.text-bg-dark, .badge.bg-light, .badge.text-bg-light { background: var(--tono-dark-bg) !important; color: var(--tono-dark-fg) !important; }
@@ -358,7 +368,7 @@ input[type="search"].form-control {
 .alert { border: 0; border-radius: var(--radio-md); }
 .alert-danger { background: var(--tono-danger-bg); color: var(--tono-danger-fg); }
 .alert-success { background: var(--tono-success-bg); color: var(--tono-success-fg); }
-.alert-warning { background: var(--tono-warning-bg); color: var(--tono-warning-fg); }
+.alert-warning { background: #fce8f0; color: #d6336c; }
 .alert-info { background: var(--tono-info-bg); color: var(--tono-info-fg); }
 
 /* ==========================================
@@ -391,7 +401,7 @@ input[type="search"].form-control {
     align-items: center;
     gap: .75rem;
     margin: 0;
-    font-family: var(--font-elegante);
+    font-family: var(--font-elegante) !important;
     font-weight: 700;
     font-size: 1.45rem !important;
     color: var(--lila-oscuro);
@@ -476,25 +486,50 @@ input[type="search"].form-control {
 .ds-tono--primary { background: var(--tono-primary-bg); color: var(--tono-primary-fg); }
 .ds-tono--success { background: var(--tono-success-bg); color: var(--tono-success-fg); }
 .ds-tono--info    { background: var(--tono-info-bg);    color: var(--tono-info-fg); }
-.ds-tono--warning { background: var(--tono-warning-bg); color: var(--tono-warning-fg); }
+.ds-tono--warning { background: #fce8f0 !important;     color: #d6336c !important; }
 .ds-tono--danger  { background: var(--tono-danger-bg);  color: var(--tono-danger-fg); }
 .ds-tono--secondary { background: var(--tono-secondary-bg); color: var(--tono-secondary-fg); }
 .ds-tono--dark    { background: var(--tono-dark-bg);    color: var(--tono-dark-fg); }
 
+/* ---------- Miniatura de foto en tabla de productos ---------- */
+.prod-thumb-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--lila-suave);
+    border: 1.5px solid var(--lila-borde);
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.prod-thumb-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.prod-thumb-wrapper i {
+    color: var(--lila-boton);
+    font-size: 1.2rem;
+}
+
 @media (max-width: 767.98px) {
     [id^="modulo-"] > .d-flex:first-child,
     .pagina-hero {
-        padding: 1.3rem 1.2rem 1.3rem 5.3rem;
+        padding: 1.3rem 1.2rem 1.3rem 5.3rem !important;
     }
     [id^="modulo-"] > .d-flex:first-child h1 > i,
     .pagina-hero h1 > i {
-        left: 1rem;
-        width: 52px;
-        height: 52px;
-        font-size: 1.2rem;
+        left: 1rem !important;
+        width: 52px !important;
+        height: 52px !important;
+        font-size: 1.2rem !important;
     }
     [id^="modulo-"] > .d-flex:first-child h1,
-    .pagina-hero h1 { font-size: 1.55rem; }
+    .pagina-hero h1 { font-size: 1.55rem !important; }
     [id^="modulo-"] > .d-flex:first-child::after,
     .pagina-hero::after { display: none; }
     [id^="modulo-"] > .d-flex:first-child > .btn { width: 100%; }
