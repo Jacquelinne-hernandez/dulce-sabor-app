@@ -288,6 +288,11 @@ class Compra extends Model
             $detalles = $datos['detalles'];
             $esCredito = $datos['condicion_pago'] === 'credito';
 
+            // La caja se bloquea primero (siempre en el mismo orden) y la
+            // empresa debe haber registrado su capital inicial.
+            Caja::bloquear();
+            Caja::exigirCapital('condicion_pago', 'registrar compras');
+
             // Bloquear los productos (siempre en el mismo orden) para evitar
             // modificaciones simultáneas de sus existencias y costos.
             $idsProductos = collect($detalles)
@@ -361,6 +366,14 @@ class Compra extends Model
             } else {
                 $pagadoInicial = $totalCentavos;
             }
+
+            // Lo que se paga ahora (contado o abono inicial) sale de la caja.
+            Caja::exigirFondos(
+                $pagadoInicial,
+                $esCredito ? 'abono_inicial' : 'condicion_pago',
+                'pagar esta compra',
+                false
+            );
 
             if ($pagadoInicial >= $totalCentavos) {
                 $estadoPago = 'pagada';

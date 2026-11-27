@@ -146,50 +146,104 @@ class Ingreso extends Model
 
     // Registro y edición
 
+    // Solo puede haber un capital inicial vigente: con él arranca la caja.
+    // Para meter más dinero se usan los demás tipos (inversión, aporte...).
+    private static function validarCapitalUnico(string $tipo, ?int $exceptoId = null): void
+    {
+        if ($tipo !== Caja::CAPITAL_INICIAL) {
+            return;
+        }
+
+        $existe = self::where('tipo', Caja::CAPITAL_INICIAL)
+            ->where('estado', 'registrado')
+            ->when($exceptoId, fn ($q) => $q->where('id', '!=', $exceptoId))
+            ->exists();
+
+        if ($existe) {
+            throw ValidationException::withMessages([
+                'tipo' => [
+                    'Ya hay un capital inicial registrado. Para agregar más dinero '
+                    . 'use Inversión, Aporte de socio u otro tipo de ingreso.',
+                ],
+            ]);
+        }
+    }
+
     public static function insertar(array $datos, int $idUsuario)
     {
-        $datos['id_usuario'] = $idUsuario;
-        $datos['estado'] = 'registrado';
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($datos, $idUsuario) {
 
-        return self::create($datos)->load('usuario:id,nombre,apellido');
+            Caja::bloquear();
+
+            self::validarCapitalUnico($datos['tipo']);
+
+            $datos['id_usuario'] = $idUsuario;
+            $datos['estado'] = 'registrado';
+
+            return self::create($datos)->load('usuario:id,nombre,apellido');
+        });
     }
 
     public static function actualizar($id, array $datos)
     {
-        $ingreso = self::find($id);
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id, $datos) {
 
-        if (!$ingreso) {
-            return null;
-        }
+            Caja::bloquear();
 
-        if ($ingreso->estado === 'anulado') {
-            throw ValidationException::withMessages([
-                'estado' => ['No se puede modificar un ingreso anulado.'],
-            ]);
-        }
+            $ingreso = self::whereKey($id)->lockForUpdate()->first();
 
-        $ingreso->update($datos);
+            if (!$ingreso) {
+                return null;
+            }
 
-        return $ingreso->load('usuario:id,nombre,apellido');
+            if ($ingreso->estado === 'anulado') {
+                throw ValidationException::withMessages([
+                    'estado' => ['No se puede modificar un ingreso anulado.'],
+                ]);
+            }
+
+            self::validarCapitalUnico($datos['tipo'] ?? $ingreso->tipo, $ingreso->id);
+
+            // Si se reduce el monto, ese dinero no puede haberse gastado ya.
+            $reduccion = Dinero::centavos($ingreso->monto)
+                - Dinero::centavos($datos['monto'] ?? $ingreso->monto);
+
+            if ($reduccion > 0) {
+                Caja::exigirFondos($reduccion, 'monto', 'reducir este ingreso', false);
+            }
+
+            $ingreso->update($datos);
+
+            return $ingreso->load('usuario:id,nombre,apellido');
+        });
     }
 
     // Los ingresos no se borran: se anulan, para conservar el registro.
     public static function anular($id)
     {
-        $ingreso = self::find($id);
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id) {
 
-        if (!$ingreso) {
-            return null;
-        }
+            Caja::bloquear();
 
-        if ($ingreso->estado === 'anulado') {
-            throw ValidationException::withMessages([
-                'estado' => ['El ingreso ya se encuentra anulado.'],
-            ]);
-        }
+            $ingreso = self::whereKey($id)->lockForUpdate()->first();
 
-        $ingreso->update(['estado' => 'anulado']);
+            if (!$ingreso) {
+                return null;
+            }
 
-        return $ingreso->load('usuario:id,nombre,apellido');
+            if ($ingreso->estado === 'anulado') {
+                throw ValidationException::withMessages([
+                    'estado' => ['El ingreso ya se encuentra anulado.'],
+                ]);
+            }
+
+            // El dinero de este ingreso pudo haberse usado ya: al anularlo, la
+            // caja no puede quedar en negativo.
+            Caja::exigirFondos(Dinero::centavos($ingreso->monto), 'estado', 'anular este ingreso', false);
+
+            $ingreso->update(['estado' => 'anulado']);
+
+            return $ingreso->load('usuario:id,nombre,apellido');
+        });
     }
 }

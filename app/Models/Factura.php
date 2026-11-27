@@ -498,6 +498,15 @@ class Factura extends Model
 
         $estadoAnterior = $factura->estado;
 
+        // Anular devuelve lo cobrado: la caja debe tener con qué hacerlo.
+        $devuelto = Dinero::centavos(
+            Pago::where('id_factura', $factura->id)
+                ->where('estado', 'aplicado')
+                ->sum('monto')
+        );
+
+        Caja::exigirFondos($devuelto, 'estado', 'devolver el dinero de la venta', false);
+
         Pago::where('id_factura', $factura->id)
             ->where('estado', 'aplicado')
             ->update(['estado' => 'anulado']);

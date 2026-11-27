@@ -3,6 +3,7 @@
 use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EstadoController;
@@ -207,6 +208,11 @@ Route::middleware(['auth', 'rol:Administrador'])->group(function () {
     Route::delete('productos/{id}/imagen', [ProductoController::class, 'quitarImagen'])
         ->whereNumber('id')
         ->name('productos.imagen.quitar');
+
+    // Caja: dinero disponible y estado de cuenta
+    Route::get('caja', [CajaController::class, 'index'])->name('caja');
+    Route::get('caja/estado', [CajaController::class, 'estado'])->name('caja.estado');
+    Route::get('caja/movimientos', [CajaController::class, 'movimientos'])->name('caja.movimientos');
 
     // Compras, deudas con proveedores y abonos
     Route::get('compras', [CompraController::class, 'index'])->name('compras');

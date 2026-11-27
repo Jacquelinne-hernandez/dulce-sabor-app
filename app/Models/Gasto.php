@@ -159,29 +159,48 @@ class Gasto extends Model
 
     public static function insertar(array $datos, int $idUsuario)
     {
-        $datos['id_usuario'] = $idUsuario;
-        $datos['estado'] = 'registrado';
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($datos, $idUsuario) {
 
-        return self::create($datos)->load('usuario:id,nombre,apellido');
+            // Sin capital inicial, o sin fondos, no se registran gastos.
+            Caja::exigirFondos(Dinero::centavos($datos['monto']), 'monto', 'registrar gastos');
+
+            $datos['id_usuario'] = $idUsuario;
+            $datos['estado'] = 'registrado';
+
+            return self::create($datos)->load('usuario:id,nombre,apellido');
+        });
     }
 
     public static function actualizar($id, array $datos)
     {
-        $gasto = self::find($id);
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id, $datos) {
 
-        if (!$gasto) {
-            return null;
-        }
+            Caja::bloquear();
 
-        if ($gasto->estado === 'anulado') {
-            throw ValidationException::withMessages([
-                'estado' => ['No se puede modificar un gasto anulado.'],
-            ]);
-        }
+            $gasto = self::whereKey($id)->lockForUpdate()->first();
 
-        $gasto->update($datos);
+            if (!$gasto) {
+                return null;
+            }
 
-        return $gasto->load('usuario:id,nombre,apellido');
+            if ($gasto->estado === 'anulado') {
+                throw ValidationException::withMessages([
+                    'estado' => ['No se puede modificar un gasto anulado.'],
+                ]);
+            }
+
+            // Solo el aumento del gasto sale de la caja.
+            $aumento = Dinero::centavos($datos['monto'] ?? $gasto->monto)
+                - Dinero::centavos($gasto->monto);
+
+            if ($aumento > 0) {
+                Caja::exigirFondos($aumento, 'monto', 'aumentar este gasto');
+            }
+
+            $gasto->update($datos);
+
+            return $gasto->load('usuario:id,nombre,apellido');
+        });
     }
 
     // Los gastos no se borran: se anulan, para conservar el registro.

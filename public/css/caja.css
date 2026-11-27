@@ -1,0 +1,66 @@
+/* ==========================================
+   DULCE SABOR SYS - CAJA (dinero disponible)
+   Requiere theme.css + global.css + componentes.css.
+   Lo carga el menú del administrador en todas las páginas, porque
+   la insignia "Dinero disponible" aparece en Compras, Gastos e Ingresos.
+   ========================================== */
+#modulo-caja {
+    --mod-fg: #2f9e6b;
+    --mod-bg: #d8f5e6;
+    --mod-hero: linear-gradient(120deg, #f6fdf9 0%, #def6ea 55%, #c9eedb 100%);
+    --mod-glyph: "\f555";
+}
+#modulo-caja > .d-flex:first-child { background: var(--mod-hero); }
+
+.caja-disponible .dato-clave__valor { font-size: 1.9rem; color: #1f9d63; }
+.caja-disponible.caja-negativa .dato-clave__valor { color: #d6335f; }
+
+.caja-entrada { color: #1f9d63; font-weight: 700; }
+.caja-salida { color: #d6335f; font-weight: 700; }
+.caja-saldo { font-weight: 700; color: var(--lila-oscuro); }
+.caja-origen {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-weight: 600;
+}
+.caja-origen__punto { width: 9px; height: 9px; border-radius: 50%; background: var(--lila-boton); }
+.caja-origen--ingreso .caja-origen__punto { background: #2f9e6b; }
+.caja-origen--cobro .caja-origen__punto { background: #4a63d6; }
+.caja-origen--gasto .caja-origen__punto { background: #d6335f; }
+.caja-origen--pago_compra .caja-origen__punto { background: #b7791f; }
+
+#caja-paginacion { border-top: 1px solid var(--lila-borde, #dcb5ec); }
+
+/* ---------- Insignia "Dinero disponible" (Compras, Gastos, Ingresos, Inicio) ---------- */
+.caja-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1rem;
+    padding: .55rem 1rem .55rem .7rem;
+    color: var(--lila-oscuro);
+    background: #fff;
+    border: 1.5px solid #b8e6cf;
+    border-radius: 999px;
+    box-shadow: var(--sombra-suave);
+}
+.caja-chip__icono {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    color: #1f9d63;
+    background: #d6f5e6;
+    border-radius: 50%;
+}
+.caja-chip__texto { display: flex; flex-direction: column; line-height: 1.15; }
+.caja-chip__titulo { font-size: .7rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--lila-texto); }
+.caja-chip__valor { font-size: 1.05rem; color: #1f9d63; }
+.caja-chip--negativa { border-color: #f4b6c6; }
+.caja-chip--negativa .caja-chip__icono { color: #d6335f; background: #fddde6; }
+.caja-chip--negativa .caja-chip__valor { color: #d6335f; }
+.caja-chip__enlace { font-size: .82rem; font-weight: 600; color: var(--lila-hover); text-decoration: none; }
+.caja-chip__enlace:hover { text-decoration: underline; }
+
+.caja-aviso-global { margin-bottom: 1rem; }

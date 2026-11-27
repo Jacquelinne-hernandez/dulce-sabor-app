@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="{{ asset('css/componentes.css') }}">
     <link rel="stylesheet" href="{{ asset('css/formato.css') }}">
     <link rel="stylesheet" href="{{ asset('css/paginacion.css') }}">
+    @if($esAdmin)
+        <link rel="stylesheet" href="{{ asset('css/caja.css') }}">
+    @endif
     @stack('estilos')
 </head>
 <body class="app-body">
@@ -161,6 +164,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a class="app-nav-link {{ $activo('caja', 'caja.*') }}" href="{{ route('caja') }}">
+                                    <i class="fa-solid fa-wallet fa-fw me-2"></i>Caja
+                                </a>
+                            </li>
+                            <li>
                                 <a class="app-nav-link {{ $activo('compras', 'compras.*') }}" href="{{ route('compras') }}">
                                     <i class="fa-solid fa-basket-shopping fa-fw me-2"></i>Compras
                                 </a>
@@ -256,6 +264,9 @@
 <script src="{{ asset('js/extras.js') }}"></script>
 <script src="{{ asset('js/formato.js') }}"></script>
 <script src="{{ asset('js/paginacion.js') }}"></script>
+@if($esAdmin)
+<script src="{{ asset('js/caja.js') }}" data-url-estado="{{ route('caja.estado') }}" data-url-caja="{{ route('caja') }}" data-url-ingresos="{{ route('ingresos') }}"></script>
+@endif
 @stack('scripts')
 </body>
 </html>

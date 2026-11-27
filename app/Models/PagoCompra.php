@@ -79,6 +79,10 @@ class PagoCompra extends Model
     {
         return DB::transaction(function () use ($idCompra, $datos, $idUsuario) {
 
+            // La caja se bloquea antes que la compra (mismo orden en todas
+            // las operaciones que mueven dinero).
+            Caja::bloquear();
+
             $compra = Compra::whereKey($idCompra)
                 ->lockForUpdate()
                 ->first();
@@ -112,6 +116,8 @@ class PagoCompra extends Model
                     ],
                 ]);
             }
+
+            Caja::exigirFondos($monto, 'monto', 'registrar este abono');
 
             $pago = self::create([
                 'id_compra' => $compra->id,
